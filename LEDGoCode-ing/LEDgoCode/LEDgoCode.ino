@@ -14,6 +14,7 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(PIXELS_COUNT, PIN, NEO_GRB + NEO_KH
 int WinCheckField[ROW][COL];
 boolean flag=0;
 unsigned char e[8];
+int globalRow;
 
 uint32_t C0 = 0xFFFFFF; //White
 uint32_t C1 = 0xFF0000; //Red
@@ -26,7 +27,7 @@ uint32_t C6 = 0xFF00FF; //Magenta
 uint32_t MyColors[7] = {C0, C1, C2, C3, C4, C5, C6}; //put the colors in an array
 
 uint32_t color1 = MyColors[0];
-uint32_t color2 = MyColors[7];
+uint32_t color2 = MyColors[5];
 
 const int buttonPin1 = 22;
 const int buttonPin2 = 24;
@@ -69,6 +70,62 @@ void clearPIXELS(){
   for (int i=0; i<PIXELS_COUNT; i++){
     pixels.setPixelColor(i, 0);
   }
+}
+
+void clearupperPIXELS(){
+  int j;
+
+  if(globalRow == 1){
+  if(e1 == 0) j = 5;
+  else if(e1 == 1) j = 9;
+  else if(e1 == 2) j = 13;
+  else if(e1 == 3) j = 17;
+  else if(e1 == 4) j = 21;
+  }
+  else if(globalRow == 2){
+    if(e2 == 0) j = 5;
+    else if(e2 == 1) j = 9;
+    else if(e2 == 2) j = 13;
+    else if(e2 == 3) j = 17;
+    else if(e2 == 4) j = 21;
+  }
+  else if(globalRow == 3){
+    if(e3 == 0) j = 5;
+    else if(e3 == 1) j = 9;
+    else if(e3 == 2) j = 13;
+    else if(e3 == 3) j = 17;
+    else if(e3 == 4) j = 21;
+  }
+  else if(globalRow == 4){
+    if(e4 == 0) j = 5;
+    else if(e4 == 1) j = 9;
+    else if(e4 == 2) j = 13;
+    else if(e4 == 3) j = 17;
+    else if(e4 == 4) j = 21;
+  }
+  else if(globalRow == 5){
+    if(e5 == 0) j = 5;
+    else if(e5 == 1) j = 9;
+    else if(e5 == 2) j = 13;
+    else if(e5 == 3) j = 17;
+    else if(e5 == 4) j = 21;
+  }
+  else if(globalRow == 6){
+    if(e6 == 0) j = 5;
+    else if(e6 == 1) j = 9;
+    else if(e6 == 2) j = 13;
+    else if(e6 == 3) j = 17;
+    else if(e6 == 4) j = 21;
+  }
+  else if(globalRow == 7){
+    if(e7 == 0) j = 5;
+    if(e7 == 1) j = 9;
+    if(e7 == 2) j = 13;
+    if(e7 == 3) j = 17;
+    if(e7 == 4) j = 21;
+  }
+
+  for
 }
 
 int calcLED(int row, int col){
@@ -114,6 +171,8 @@ void pixelarrayInit(){
   }
 }
 
+void showLinecolor(
+
 void showBlockcolor(int i, int j, uint32_t color){
   int cnt = 0;
   int ledarr[9] = {calcLED(i,j), calcLED(i,j+1), calcLED(i,j+2), calcLED(i+1,j), calcLED(i+1,j+1), calcLED(i+1,j+2), calcLED(i+2,j), calcLED(i+2,j+1), calcLED(i+2,j+2)};
@@ -127,10 +186,6 @@ void showBlockcolor(int i, int j, uint32_t color){
   display_PixelColor(ledarr[cnt+6], color);
   display_PixelColor(ledarr[cnt+7], color);
   display_PixelColor(ledarr[cnt+8], color);
-}
-
-void stackBlock(){
-  
 }
 
 int enterROW(){
@@ -200,13 +255,16 @@ int enterROW(){
   }
 }
 
-int WinCheckField_Data(){
+void WinCheckField_Data(){
   Serial.println("WinCheckField_Data Start");
-  int row = blockBlink();
+  int row = enterROW(); //globalRow;
   Serial.print("WinCheck row : ");
   Serial.println(row);
-  if(flag == 0) flag = 1; else flag = 0;
   int col = empty_check(row);
+  Serial.print(" col ?:");
+  Serial.println(col); 
+  if(col<6){
+   if(flag == 0) flag = 1; else flag = 0;}
   Serial.print("WinCheck col : ");
   Serial.println(col);
   Serial.print("Before WinCheckField[row][col] : ");
@@ -221,6 +279,7 @@ int WinCheckField_Data(){
     else{
       showBlockcolor(4*row+1, 4*col+1, color2);
     }
+    
     if(col > 4){
       Serial.print("Row");
       Serial.print(row);
@@ -245,9 +304,10 @@ int empty_check(int i) {
   return e[i];
 }
 
-int blockBlink(){
+void blockBlink(){
   Serial.println("blockBlink Start");
-  int i = enterROW();
+  globalRow = enterROW();
+  int i = globalRow;
   int j;
   int top = 21;
 
@@ -264,7 +324,7 @@ int blockBlink(){
     showBlockcolor(4*i+1, top, color1);
     delay(100);
     top = top - 4;
-    clearPIXELS();
+    //clearPIXELS();
   }
   }
   else{
@@ -272,11 +332,25 @@ int blockBlink(){
     showBlockcolor(4*i+1, top, color2);
     delay(100);
     top = top - 4;
-    clearPIXELS();
+    //clearPIXELS();
   }
   }
   Serial.println("blockBlink END");
-  return i;
+}
+
+void fieldON(){
+  Serial.println("fieldON Start");
+  int i;
+  int j;
+  
+  for(i=1; i<=7; i++)
+    for(j=0; j<=6; j++){
+        if(WinCheckField_Data[i][j] == 0)
+          showBlockcolor(4*i+1, 4*j+1, color1);
+        else if(WinCheckField_Data[i][j] == 1)
+          showBlockcolor(4*i+1, 4*j+1, color2);
+    }
+  Serial.println("fieldON End");
 }
 
 void setup() {
@@ -299,4 +373,5 @@ void loop() {
   //blockBlink();
   //clearPIXELS();
   WinCheckField_Data();
+  //fieldON();
 }
