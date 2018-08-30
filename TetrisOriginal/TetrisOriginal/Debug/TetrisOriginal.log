@@ -1,0 +1,9 @@
+﻿  TetrisOriginal.cpp
+c:\users\song\onedrive\ledgo\ledgogithub\tetrisoriginal\tetrisoriginal\tetrisoriginal.cpp(390): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
+c:\users\song\onedrive\ledgo\ledgogithub\tetrisoriginal\tetrisoriginal\tetrisoriginal.cpp(563): warning C4101: 'y1' :참조되지 않은 지역 변수입니다.
+c:\users\song\onedrive\ledgo\ledgogithub\tetrisoriginal\tetrisoriginal\tetrisoriginal.cpp(563): warning C4101: 'x1' :참조되지 않은 지역 변수입니다.
+c:\users\song\onedrive\ledgo\ledgogithub\tetrisoriginal\tetrisoriginal\tetrisoriginal.cpp(705): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\song\onedrive\ledgo\ledgogithub\tetrisoriginal\tetrisoriginal\tetrisoriginal.cpp(703): warning C4101: 'winOver' :참조되지 않은 지역 변수입니다.
+c:\users\song\onedrive\ledgo\ledgogithub\tetrisoriginal\tetrisoriginal\tetrisoriginal.cpp(738): warning C4101: 'tmp' :참조되지 않은 지역 변수입니다.
+c:\users\song\onedrive\ledgo\ledgogithub\tetrisoriginal\tetrisoriginal\tetrisoriginal.cpp(734): warning C4101: 'var' :참조되지 않은 지역 변수입니다.
+  TetrisOriginal.vcxproj -> C:\Users\SONG\OneDrive\LEDGo\LEDgoGithub\TetrisOriginal\Debug\TetrisOriginal.exe
