@@ -276,7 +276,6 @@ void blockBlink(){
     delay(100);
     if(top > 4*j+1) showBlockcolor(4*i+1, top, 0);
     top = top - 4;
-    //clearPIXELS();
   }
   }
   Serial.println("blockBlink END");
