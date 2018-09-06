@@ -72,62 +72,6 @@ void clearPIXELS(){
   }
 }
 
-void clearupperPIXELS(){
-  int j;
-
-  if(globalRow == 1){
-  if(e1 == 0) j = 5;
-  else if(e1 == 1) j = 9;
-  else if(e1 == 2) j = 13;
-  else if(e1 == 3) j = 17;
-  else if(e1 == 4) j = 21;
-  }
-  else if(globalRow == 2){
-    if(e2 == 0) j = 5;
-    else if(e2 == 1) j = 9;
-    else if(e2 == 2) j = 13;
-    else if(e2 == 3) j = 17;
-    else if(e2 == 4) j = 21;
-  }
-  else if(globalRow == 3){
-    if(e3 == 0) j = 5;
-    else if(e3 == 1) j = 9;
-    else if(e3 == 2) j = 13;
-    else if(e3 == 3) j = 17;
-    else if(e3 == 4) j = 21;
-  }
-  else if(globalRow == 4){
-    if(e4 == 0) j = 5;
-    else if(e4 == 1) j = 9;
-    else if(e4 == 2) j = 13;
-    else if(e4 == 3) j = 17;
-    else if(e4 == 4) j = 21;
-  }
-  else if(globalRow == 5){
-    if(e5 == 0) j = 5;
-    else if(e5 == 1) j = 9;
-    else if(e5 == 2) j = 13;
-    else if(e5 == 3) j = 17;
-    else if(e5 == 4) j = 21;
-  }
-  else if(globalRow == 6){
-    if(e6 == 0) j = 5;
-    else if(e6 == 1) j = 9;
-    else if(e6 == 2) j = 13;
-    else if(e6 == 3) j = 17;
-    else if(e6 == 4) j = 21;
-  }
-  else if(globalRow == 7){
-    if(e7 == 0) j = 5;
-    if(e7 == 1) j = 9;
-    if(e7 == 2) j = 13;
-    if(e7 == 3) j = 17;
-    if(e7 == 4) j = 21;
-  }
-
-  for
-}
-
 int calcLED(int row, int col){
   int odd = row%2;
   int led = 0;
@@ -170,8 +114,6 @@ void pixelarrayInit(){
       e[i] = 0x00;
   }
 }
-
-void showLinecolor(
 
 void showBlockcolor(int i, int j, uint32_t color){
   int cnt = 0;
@@ -305,6 +247,7 @@ int empty_check(int i) {
 }
 
 void blockBlink(){
+  Serial.println("******************");
   Serial.println("blockBlink Start");
   globalRow = enterROW();
   int i = globalRow;
@@ -323,14 +266,15 @@ void blockBlink(){
   while(top >= 4*j+1){
     showBlockcolor(4*i+1, top, color1);
     delay(100);
+    if(top > 4*j+1) showBlockcolor(4*i+1, top, 0);
     top = top - 4;
-    //clearPIXELS();
   }
   }
   else{
     while(top >= 4*j+1){
     showBlockcolor(4*i+1, top, color2);
     delay(100);
+    if(top > 4*j+1) showBlockcolor(4*i+1, top, 0);
     top = top - 4;
     //clearPIXELS();
   }
