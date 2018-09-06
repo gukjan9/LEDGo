@@ -282,21 +282,6 @@ void blockBlink(){
   Serial.println("blockBlink END");
 }
 
-void fieldON(){
-  Serial.println("fieldON Start");
-  int i;
-  int j;
-  
-  for(i=1; i<=7; i++)
-    for(j=0; j<=6; j++){
-        if(WinCheckField_Data[i][j] == 0)
-          showBlockcolor(4*i+1, 4*j+1, color1);
-        else if(WinCheckField_Data[i][j] == 1)
-          showBlockcolor(4*i+1, 4*j+1, color2);
-    }
-  Serial.println("fieldON End");
-}
-
 void setup() {
   Serial.begin(9600);
   pixels.begin();
@@ -314,8 +299,6 @@ void setup() {
 }
 
 void loop() {
-  //blockBlink();
-  //clearPIXELS();
+  blockBlink();
   WinCheckField_Data();
-  //fieldON();
 }
