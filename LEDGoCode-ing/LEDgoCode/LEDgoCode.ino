@@ -1,4 +1,8 @@
+#include <Adafruit_GFX.h>
+#include <Adafruit_NeoMatrix.h>
 #include <Adafruit_NeoPixel.h>
+#include <Wire.h>
+#include "RTClib.h"
 
 #define PIN            3
 
@@ -10,11 +14,23 @@
 #define COL 6
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(PIXELS_COUNT, PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(96, 8, PIN,
+  NEO_MATRIX_TOP    + NEO_MATRIX_LEFT +
+  NEO_MATRIX_COLUMNS + NEO_MATRIX_SEQUENCE,
+  NEO_GRB            + NEO_KHZ800);
+
+RTC_DS3231 rtc;
+char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+
+const uint16_t colors[] = {
+  matrix.Color(255, 0, 0), matrix.Color(0, 255, 0), matrix.Color(255, 255, 0),matrix.Color(0, 0, 255), matrix.Color(255, 0, 255), matrix.Color(0, 255, 255), matrix.Color(255, 255, 255)};
+int x = matrix.width();
 
 int WinCheckField[ROW][COL];
 boolean flag=0;
 unsigned char e[8];
 int globalRow;
+int gamestatus = -1;
 
 uint32_t C0 = 0xFFFFFF; //White
 uint32_t C1 = 0xFF0000; //Red
@@ -199,14 +215,12 @@ int enterROW(){
 
 void WinCheckField_Data(){
   Serial.println("WinCheckField_Data Start");
-  int row = enterROW(); //globalRow;
+  int row = globalRow;
   Serial.print("WinCheck row : ");
   Serial.println(row);
   int col = empty_check(row);
-  Serial.print(" col ?:");
-  Serial.println(col); 
-  if(col<6){
-   if(flag == 0) flag = 1; else flag = 0;}
+    
+  if(flag == 0) flag = 1; else flag = 0;
   Serial.print("WinCheck col : ");
   Serial.println(col);
   Serial.print("Before WinCheckField[row][col] : ");
@@ -215,20 +229,11 @@ void WinCheckField_Data(){
     WinCheckField[row][col] = flag;
     Serial.print("After WinCheckField[row][col] : ");
     Serial.println(WinCheckField[row][col]);
-    if(WinCheckField[row][col] == 1){
-      showBlockcolor(4*row+1, 4*col+1, color1);
-    }
-    else{
-      showBlockcolor(4*row+1, 4*col+1, color2);
+    if(WinCheckField[row][col] == 1) showBlockcolor(4*row+1, 4*col+1, color1);
+    else showBlockcolor(4*row+1, 4*col+1, color2);
     }
     
-    if(col > 4){
-      Serial.print("Row");
-      Serial.print(row);
-      Serial.println(" is FULL! Enter other Row");
-      enterROW();
-    }
-    else col = e[row]++;
+    col = e[row]++;
     
     if(row == 0) e1++;
     else if(row == 1) e2++;
@@ -237,7 +242,7 @@ void WinCheckField_Data(){
     else if(row == 4) e5++;
     else if(row == 5) e6++;
     else if(row == 6) e7++;
-  } else {
+    else {
     //WinCheckField_Data();
   }
 }
@@ -262,6 +267,13 @@ void blockBlink(){
   else if(i == 5) j = e6;
   else if(i == 6) j = e7;
 
+  if(j > 5){
+      Serial.print("Row");
+      Serial.print(globalRow);
+      Serial.println(" is FULL! Enter other Row");
+      blockBlink();
+    }
+
   if(flag == 0){
   while(top >= 4*j+1){
     showBlockcolor(4*i+1, top, color1);
@@ -279,6 +291,48 @@ void blockBlink(){
   }
   }
   Serial.println("blockBlink END");
+}
+
+void rtcFunc(){
+  delay(3000); // wait for console opening
+
+  if (! rtc.begin()) {
+    Serial.println("Couldn't find RTC");
+    while (1);
+  }
+
+  if (rtc.lostPower()) {
+    Serial.println("RTC lost power, lets set the time!");
+    // following line sets the RTC to the date & time this sketch was compiled
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+    // This line sets the RTC with an explicit date & time, for example to set
+    // January 21, 2014 at 3am you would call:
+     rtc.adjust(DateTime(2018, 8, 15, 13, 40, 0));
+  }
+}
+
+void rtcLed(){
+  Serial.println("RTC Start!");
+  DateTime now = rtc.now();
+  DateTime future (now + TimeSpan(7,12,30,6));
+
+  matrix.fillScreen(0); 
+  matrix.setCursor(68, 0); 
+  matrix.print(future.year());
+  matrix.setCursor(36, 0);
+  matrix.print(future.month());
+  matrix.print(F("/"));
+  matrix.print(future.day());
+   matrix.setCursor(0, 0);
+  matrix.print(future.hour());
+  matrix.print(F(":"));
+  matrix.print(future.minute());
+  
+matrix.setTextColor(colors[0]);
+ 
+  matrix.show();
+  delay(30);
+    Serial.println("RTC End");
 }
 
 void setup() {
