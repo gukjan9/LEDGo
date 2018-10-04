@@ -89,6 +89,40 @@ void clearPIXELS(){
   }
 }
 
+void display_PixelHex(int hex, int textRow, int textCol){
+  if(hex == 0x04){
+    display_PixelColor(calcLED(3+textRow, textCol), color1);
+  }
+  else if(hex == 0x0A){
+    display_PixelColor(calcLED(2+textRow, textCol), color1);
+    display_PixelColor(calcLED(4+textRow, textCol), color1);
+  }
+  else if(hex == 0x11){
+    display_PixelColor(calcLED(1+textRow, textCol), color1);
+    display_PixelColor(calcLED(5+textRow, textCol), color1);
+  }
+  else if(hex == 0x1F){
+    display_PixelColor(calcLED(1+textRow, textCol), color1);
+    display_PixelColor(calcLED(2+textRow, textCol), color1);
+    display_PixelColor(calcLED(3+textRow, textCol), color1);
+    display_PixelColor(calcLED(4+textRow, textCol), color1);
+    display_PixelColor(calcLED(5+textRow, textCol), color1);
+  }
+}
+
+void display_Alphabet(char alphabet, int Cursor){ // pointer
+  int arr[7];
+  int A[7] = {0x11, 0x11, 0x11, 0x1F, 0x11, 0x0A, 0x04};
+  if (alphabet = 'A') arr[7] = A[7];
+  display_PixelHex(arr[0], Cursor, 1);
+  display_PixelHex(arr[1], Cursor, 2);
+  display_PixelHex(arr[2], Cursor, 3);
+  display_PixelHex(arr[3], Cursor, 4);
+  display_PixelHex(arr[4], Cursor, 5);
+  display_PixelHex(arr[5], Cursor, 6);
+  display_PixelHex(arr[6], Cursor, 7);
+}
+
 int calcLED(int row, int col){
   int odd = row%2;
   int led = 0;
@@ -133,18 +167,17 @@ void pixelarrayInit(){
 }
 
 void showBlockcolor(int i, int j, uint32_t color){
-  int cnt = 0;
   int ledarr[9] = {calcLED(i,j), calcLED(i,j+1), calcLED(i,j+2), calcLED(i+1,j), calcLED(i+1,j+1), calcLED(i+1,j+2), calcLED(i+2,j), calcLED(i+2,j+1), calcLED(i+2,j+2)};
   
-  display_PixelColor(ledarr[cnt], color);
-  display_PixelColor(ledarr[cnt+1], color);
-  display_PixelColor(ledarr[cnt+2], color);
-  display_PixelColor(ledarr[cnt+3], color);
-  display_PixelColor(ledarr[cnt+4], color);
-  display_PixelColor(ledarr[cnt+5], color);
-  display_PixelColor(ledarr[cnt+6], color);
-  display_PixelColor(ledarr[cnt+7], color);
-  display_PixelColor(ledarr[cnt+8], color);
+  display_PixelColor(ledarr[0], color);
+  display_PixelColor(ledarr[1], color);
+  display_PixelColor(ledarr[2], color);
+  display_PixelColor(ledarr[3], color);
+  display_PixelColor(ledarr[4], color);
+  display_PixelColor(ledarr[5], color);
+  display_PixelColor(ledarr[6], color);
+  display_PixelColor(ledarr[7], color);
+  display_PixelColor(ledarr[8], color);
 }
 
 int enterROW(){
@@ -213,6 +246,21 @@ int enterROW(){
    bt7=buttonState7;
   }
 }
+
+/* void readyDisplay(){
+  display_PixelColor(calcLED(
+}
+
+void readyPlayer(){
+  int player1, player2;
+  int val1 = enterRow();
+  
+  if(val1 == 0){
+    player1 = 1;
+  }
+  
+  
+} */
 
 int empty_check(int i) {
   return e[i];
@@ -848,7 +896,7 @@ void rtcLed(){
   matrix.print(future.month());
   matrix.print(F("/"));
   matrix.print(future.day());
-   matrix.setCursor(0, 0);
+  matrix.setCursor(0, 0);
   matrix.print(future.hour());
   matrix.print(F(":"));
   matrix.print(future.minute());
@@ -877,6 +925,9 @@ void setup() {
 }
 
 void loop() {
-  blockBlink();
-  WinCheckField_Data();
+  //blockBlink();
+  //WinCheckField_Data();
+  display_Alphabet('A', 0);
+  display_Alphabet('A', 8);
+
 }
