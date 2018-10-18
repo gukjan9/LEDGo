@@ -1,6 +1,8 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_NeoMatrix.h>
 #include <Adafruit_NeoPixel.h>
+#include <MsTimer.h>
+#include <MsTimer2.h>
 #include <Wire.h>
 #include "RTClib.h"
 
@@ -30,7 +32,11 @@ int WinCheckField[ROW][COL];
 boolean flag=0;
 unsigned char e[8];
 int globalRow;
-int gamestatus = -1;
+
+int player1 = 0;
+int player2 = 0;
+
+int gamestatus = 0;
 
 uint32_t C0 = 0xFFFFFF; //White
 uint32_t C1 = 0xFF0000; //Red
@@ -44,7 +50,13 @@ uint32_t MyColors[7] = {C0, C1, C2, C3, C4, C5, C6}; //put the colors in an arra
 
 uint32_t color2 = MyColors[1];
 uint32_t color1 = MyColors[2];
-uint32_t color3 = MyColors[0];
+uint32_t color3 = MyColors[6];
+
+const int Button_Fn = 22;
+boolean mouseIsActive = false;    // whether or not to control the mouse
+int lastSwitchState = LOW;        // previous switch state
+
+
 
 const int buttonPin1 = 22;
 const int buttonPin2 = 24;
@@ -80,7 +92,7 @@ int e7 = 0;
 
 void display_PixelColor(int led, uint32_t color) {
       pixels.setPixelColor(led, color);
-      pixels.show(); 
+      pixels.show();
 }
 
 void clearPIXELS(){
@@ -125,19 +137,19 @@ int calcLED(int row, int col){
   }
 }
 
-int Quotient(int x, int y){
+int Quotient(int x, int y){               // 몫 함수
   int q = x / y;
   
   return q;
 }
 
-int Remainder(int x, int y){
+int Remainder(int x, int y){              // 나머지 함수
   int r = x % y;
 
   return r;
 }
 
-void display_5bit(int data, int textRow, int textCol){
+void display_5bit(int data, int textRow, int textCol){              // ■■■■■ 구현
   int division = 16;
   
   while(division != 0){
@@ -146,16 +158,16 @@ void display_5bit(int data, int textRow, int textCol){
     if(valBit == 0) valBit = 0;
     else valBit = 1;
  
-    if(division == 0x10) display_PixelColor(calcLED((5+(6*textRow))*valBit, textCol*valBit), color1);
-    else if(division == 0x08) display_PixelColor(calcLED((4+(6*textRow))*valBit, textCol*valBit), color1);
-    else if(division == 0x04) display_PixelColor(calcLED((3+(6*textRow))*valBit, textCol*valBit), color1);
-    else if(division == 0x02) display_PixelColor(calcLED((2+(6*textRow))*valBit, textCol*valBit), color1);
-    else if(division == 0x01) display_PixelColor(calcLED((1+(6*textRow))*valBit, textCol*valBit), color1);
+    if(division == 0x10) display_PixelColor(calcLED((5+textRow)*valBit, textCol*valBit), color1);             // (6*textRow) -> 1줄에 5글자일때 일정간격 띄운것
+    else if(division == 0x08) display_PixelColor(calcLED((4+textRow)*valBit, textCol*valBit), color1);
+    else if(division == 0x04) display_PixelColor(calcLED((3+textRow)*valBit, textCol*valBit), color1);
+    else if(division == 0x02) display_PixelColor(calcLED((2+textRow)*valBit, textCol*valBit), color1);
+    else if(division == 0x01) display_PixelColor(calcLED((1+textRow)*valBit, textCol*valBit), color1);
     division = division / 2;
   }
 }
 
-void display_PixelHex(int hex, int textRow, int textCol){
+void display_PixelHex(int hex, int textRow, int textCol){             // hex값에 따라 ■■■■■ 구현
   int quotient = hex;
   int data = 0x00;
   
@@ -168,7 +180,7 @@ void display_PixelHex(int hex, int textRow, int textCol){
   display_5bit(hex, textRow, textCol);
 }
 
-void display_Alphabet(char alphabet, int textRow, int textCol){  
+void display_Alphabet(char alphabet, int textRow, int textCol){           // Alphabet 정의  
   int Alphabet[44][7] = 
   {{0X0E, 0X11, 0X11, 0X11, 0X11, 0X11, 0X0E}, // 0
   {0X1F, 0X04, 0X04, 0X04, 0X05, 0X06, 0X04},
@@ -191,7 +203,7 @@ void display_Alphabet(char alphabet, int textRow, int textCol){
   {0X11, 0X11, 0X11, 0X1F, 0X11, 0X11, 0X11}, 
   {0X1F, 0X04, 0X04, 0X04, 0X04, 0X04, 0X1F}, 
   {0X06, 0X09, 0X08, 0X08, 0X08, 0X08, 0X1F}, 
-  {0X1F, 0X09, 0X05, 0X03, 0X05, 0X09, 0X1F}, 
+  {0X11, 0X09, 0X05, 0X03, 0X05, 0X09, 0X11}, 
   {0X1F, 0X01, 0X01, 0X01, 0X01, 0X01, 0X01}, // L
   {0X11, 0X11, 0X11, 0X11, 0X15, 0X1B, 0X11}, 
   {0X11, 0X19, 0X19, 0X15, 0X13, 0X13, 0X11}, 
@@ -219,7 +231,7 @@ void display_Alphabet(char alphabet, int textRow, int textCol){
   display_PixelHex(Alphabet[ascii - 48][6], textRow, 7+(textCol*8));
 }
 
-void pixelarrayInit(){
+void pixelarrayInit(){                    // Wincheck값 초기화
   for(int i=0; i<ROW; i++) {
       for(int j=0; j<COL; j++) {
             WinCheckField[i][j] = 8;  
@@ -309,16 +321,121 @@ int enterRow(){
   }
 }
 
+void display_Firework(int i){
+  int j;
+  for(j=1; j<=12; j++){
+    display_PixelColor(calcLED(i+3,j), color3);
+    delay(70);
+    display_PixelColor(calcLED(i+3,j), 0);
+  }
+  display_PixelColor(calcLED(i+3,12), color3);
+  display_PixelColor(calcLED(i+2,13), color3);
+  display_PixelColor(calcLED(i+4,13), color3);
+  display_PixelColor(calcLED(i+2,11), color3);
+  display_PixelColor(calcLED(i+4,11), color3);
+  delay(100);
+  display_PixelColor(calcLED(i+3,12), 0);
+  display_PixelColor(calcLED(i+2,13), 0);
+  display_PixelColor(calcLED(i+4,13), 0);
+  display_PixelColor(calcLED(i+2,11), 0);
+  display_PixelColor(calcLED(i+4,11), 0);
+  delay(100);
+  display_PixelColor(calcLED(i+3,13), color3);
+  display_PixelColor(calcLED(i+3,14), color3);
+  display_PixelColor(calcLED(i+4,12), color3);
+  display_PixelColor(calcLED(i+5,12), color3);
+  display_PixelColor(calcLED(i+3,10), color3);
+  display_PixelColor(calcLED(i+3,11), color3);
+  display_PixelColor(calcLED(i+1,12), color3);
+  display_PixelColor(calcLED(i+2,12), color3);
+  delay(100);
+  display_PixelColor(calcLED(i+3,13), 0);
+  display_PixelColor(calcLED(i+3,14), 0);
+  display_PixelColor(calcLED(i+4,12), 0);
+  display_PixelColor(calcLED(i+5,12), 0);
+  display_PixelColor(calcLED(i+3,10), 0);
+  display_PixelColor(calcLED(i+3,11), 0);
+  display_PixelColor(calcLED(i+1,12), 0);
+  display_PixelColor(calcLED(i+2,12), 0);
+  delay(100);
+}
+
+void display_LEDGo(){
+  Serial.println("Welcome to LEDGo!");
+  display_Firework(2);
+  display_Alphabet('L', 2, 1);
+  display_Firework(8);
+  display_Alphabet('E', 8, 1);
+  display_Firework(14);
+  display_Alphabet('D', 14, 1);
+  display_Firework(20);
+  display_Alphabet('G', 20, 1);
+  display_Firework(26);
+  display_Alphabet('O', 26, 1);
+}
+
+void display_PressAnyKey(){
+  Serial.println("Press Any Key to Start");
+  display_Alphabet('P', 2, 2);
+  display_Alphabet('R', 8, 2);
+  display_Alphabet('E', 14, 2);
+  display_Alphabet('S', 20, 2);
+  display_Alphabet('S', 26, 2);
+
+  display_Alphabet('A', 8, 1);
+  display_Alphabet('N', 14, 1);
+  display_Alphabet('Y', 20, 1);
+
+  display_Alphabet('K', 8, 0);
+  display_Alphabet('E', 14, 0);
+  display_Alphabet('Y', 20, 0);
+}
+
+void display_StartingScreen(){
+  int lux;
+  pixels.setBrightness(20);
+  display_LEDGo();
+  Serial.println("Dimming Brightness");
+  for(lux = 20; lux >= 0; lux--){
+    Serial.print("Lux : ");
+    Serial.println(lux);
+    pixels.setBrightness(lux);
+    pixels.show();
+    delay(70);
+  }
+  pixels.setBrightness(20);
+  display_PressAnyKey();
+  Serial.println("Dimming Brightness");
+  for(lux = 20; lux >= 0; lux--){
+    Serial.print("Lux : ");
+    Serial.println(lux);
+    pixels.setBrightness(lux);
+    pixels.show();
+    delay(70);
+  }
+}
+
+void enterAnyKey(){
+  int switchState = digitalRead ( Button_Fn );
+  if (switchState != lastSwitchState) {
+    if (switchState == HIGH) {
+      mouseIsActive = !mouseIsActive;
+      //digitalWrite(ledPin, mouseIsActive);
+    }
+  }
+  lastSwitchState = switchState;
+}
+
 void displayPlayer(int player){
   Serial.print("Waiting for Player ");
   Serial.println(player);
   display_Alphabet('P', 0, 2);
-  display_Alphabet('L', 1, 2);
-  display_Alphabet('A', 2, 2);
-  display_Alphabet('Y', 3, 2);
-  display_Alphabet('E', 4, 2);
+  display_Alphabet('L', 6, 2);
+  display_Alphabet('A', 12, 2);
+  display_Alphabet('Y', 18, 2);
+  display_Alphabet('E', 24, 2);
 
-  display_Alphabet('1', 2, 1);
+  display_Alphabet('1', 12, 1);
 }
 
 void displayReady(int player){
@@ -326,30 +443,36 @@ void displayReady(int player){
   Serial.print(player);
   Serial.println(" is Ready !");
   display_Alphabet('R', 0, 0);
-  display_Alphabet('E', 1, 0);
-  display_Alphabet('A', 2, 0);
-  display_Alphabet('D', 3, 0);
-  display_Alphabet('Y', 4, 0);
+  display_Alphabet('E', 6, 0);
+  display_Alphabet('A', 12, 0);
+  display_Alphabet('D', 18, 0);
+  display_Alphabet('Y', 24, 0);
 }
 
-int enterPlayer(){
+void enterPlayer(){
+  Serial.println("enterPlayer Start");
   int val = enterRow();
-  if(val == 0) return 1;
-  else if(val == 6) return 1;
-  else return 0;
-}
 
-void readyPlayer(){
-  int player1 = 0;
-  int player2 = 0;
-
-  
+  if(val == 0 | val == 6){
+    if(val == 0 && player1 == 0){
+      player1 = 1;
+      displayReady(1);
+      if(player2 == 0) enterPlayer();
+     }
+   else if(val == 6 && player2 == 0){
+      player2 = 1;
+      displayReady(2);
+      if(player1 == 0) enterPlayer();
+     }
+   }
+   else enterPlayer();
 
   if(player1 == 1 && player2 == 1){
-    displayReady();
-    gamestatus += 1;
+    Serial.println("GAME START !");
+    gamestatus = 2;
     clearPIXELS();
   }
+  else enterPlayer();
 }
 
 int empty_check(int i) {
@@ -955,6 +1078,18 @@ void blockBlink(){
   }
   Serial.println("blockBlink END");
 }
+int a=0;
+
+void setTime(){
+  a = a+1;
+  Serial.println(a);
+  Serial.println(gamestatus);
+  if(a == 10){
+    gamestatus = -1;
+    Serial.println(gamestatus);
+    MsTimer2::stop();
+    }
+}
 
 void rtcFunc(){
   delay(3000); // wait for console opening
@@ -1002,7 +1137,9 @@ void setup() {
   Serial.begin(9600);
   pixels.begin();
   pixels.setBrightness(20);
-  
+
+  pinMode ( Button_Fn, INPUT );
+
   pinMode(buttonPin1, INPUT);
   pinMode(buttonPin2, INPUT);
   pinMode(buttonPin3, INPUT);
@@ -1011,34 +1148,39 @@ void setup() {
   pinMode(buttonPin6, INPUT);
   pinMode(buttonPin7, INPUT);
 
-  pixelarrayInit();
+  rtcFunc();
 
-  displayPlayer();
-  readyPlayer();
-  Serial.println("GAME START !");
+  /* if(gamestatus == 0){
+    MsTimer2::set(100, display_StartingScreen);
+    MsTimer2::start();
+  } */
+
+  /* if(gamestatus == 1){
+    MsTimer2::set(1000, setTime);
+    MsTimer2::start();
+  } */
+
+  pixelarrayInit();
 }
 
 void loop() {
-  if(gamestatus == 0){
+  if(gamestatus == -1) rtcLed();
+
+  else if(gamestatus == 0){
+    enterAnyKey();
+    display_StartingScreen();
+    if ( mouseIsActive ) {
+      gamestatus = 1;
+    }
+  }
+  
+  else if(gamestatus == 1){
+    displayPlayer(1);
+    enterPlayer();
+  }
+    
+  else if(gamestatus == 2){
     blockBlink();
     WinCheckField_Data();
   }
-  /*
-  display_Alphabet('A', 0, 2);
-  display_Alphabet('B', 1, 2);
-  display_Alphabet('C', 2, 2);
-  display_Alphabet('D', 3, 2);
-  display_Alphabet('E', 4, 2);
-  
-  display_Alphabet('F', 0, 1);
-  display_Alphabet('G', 1, 1);
-  display_Alphabet('H', 2, 1);
-  display_Alphabet('I', 3, 1);
-  display_Alphabet('J', 4, 1);
-  
-  display_Alphabet('1', 0, 0);
-  display_Alphabet('2', 1, 0);
-  display_Alphabet('3', 2, 0);
-  display_Alphabet('4', 3, 0);
-  display_Alphabet('5', 4, 0); */
 }
