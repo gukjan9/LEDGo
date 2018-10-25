@@ -1,7 +1,6 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_NeoMatrix.h>
 #include <Adafruit_NeoPixel.h>
-#include <MsTimer.h>
 #include <MsTimer2.h>
 #include <Wire.h>
 #include "RTClib.h"
@@ -16,6 +15,7 @@
 #define COL 6
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(PIXELS_COUNT, PIN, NEO_GRB + NEO_KHZ800);
+
 Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(96, 8, PIN,
   NEO_MATRIX_TOP    + NEO_MATRIX_LEFT +
   NEO_MATRIX_COLUMNS + NEO_MATRIX_SEQUENCE,
@@ -33,10 +33,10 @@ boolean flag=0;
 unsigned char e[8];
 int globalRow;
 
+int gamestatus = 0;
+
 int player1 = 0;
 int player2 = 0;
-
-int gamestatus = 0;
 
 uint32_t C0 = 0xFFFFFF; //White
 uint32_t C1 = 0xFF0000; //Red
@@ -51,12 +51,6 @@ uint32_t MyColors[7] = {C0, C1, C2, C3, C4, C5, C6}; //put the colors in an arra
 uint32_t color2 = MyColors[1];
 uint32_t color1 = MyColors[2];
 uint32_t color3 = MyColors[6];
-
-const int Button_Fn = 22;
-boolean mouseIsActive = false;    // whether or not to control the mouse
-int lastSwitchState = LOW;        // previous switch state
-
-
 
 const int buttonPin1 = 22;
 const int buttonPin2 = 24;
@@ -92,6 +86,7 @@ int e7 = 0;
 
 void display_PixelColor(int led, uint32_t color) {
       pixels.setPixelColor(led, color);
+      pixels.setPixelColor(led+768, color);
       pixels.show();
 }
 
@@ -391,7 +386,7 @@ void display_PressAnyKey(){
   display_Alphabet('Y', 20, 0);
 }
 
-void display_StartingScreen(){
+void display_StartingScreen(){                  // 오프닝 화면
   int lux;
   pixels.setBrightness(20);
   display_LEDGo();
@@ -413,17 +408,6 @@ void display_StartingScreen(){
     pixels.show();
     delay(70);
   }
-}
-
-void enterAnyKey(){
-  int switchState = digitalRead ( Button_Fn );
-  if (switchState != lastSwitchState) {
-    if (switchState == HIGH) {
-      mouseIsActive = !mouseIsActive;
-      //digitalWrite(ledPin, mouseIsActive);
-    }
-  }
-  lastSwitchState = switchState;
 }
 
 void displayPlayer(int player){
@@ -1078,18 +1062,6 @@ void blockBlink(){
   }
   Serial.println("blockBlink END");
 }
-int a=0;
-
-void setTime(){
-  a = a+1;
-  Serial.println(a);
-  Serial.println(gamestatus);
-  if(a == 10){
-    gamestatus = -1;
-    Serial.println(gamestatus);
-    MsTimer2::stop();
-    }
-}
 
 void rtcFunc(){
   delay(3000); // wait for console opening
@@ -1133,12 +1105,29 @@ matrix.setTextColor(colors[0]);
     Serial.println("RTC End");
 }
 
+boolean mouseIsActive = false;    // whether or not to control the mouse
+int lastSwitchState = LOW;        // previous switch state
+
+void enterAnyKey(){
+  Serial.println("enterAnyKey Start");
+  int switchState = digitalRead (buttonPin1) | digitalRead (buttonPin2) | digitalRead (buttonPin3) 
+                  | digitalRead (buttonPin4) | digitalRead (buttonPin5) | digitalRead (buttonPin6)| digitalRead (buttonPin7); // Press Any Key
+  if (switchState != lastSwitchState) {
+    if (switchState == HIGH) {
+      Serial.println("Button Pressed");
+      mouseIsActive = !mouseIsActive;
+    }
+  }
+  if ( mouseIsActive ) {
+      gamestatus = 1;
+    }
+  lastSwitchState = switchState;
+}
+
 void setup() {
   Serial.begin(9600);
   pixels.begin();
   pixels.setBrightness(20);
-
-  pinMode ( Button_Fn, INPUT );
 
   pinMode(buttonPin1, INPUT);
   pinMode(buttonPin2, INPUT);
@@ -1150,10 +1139,10 @@ void setup() {
 
   rtcFunc();
 
-  /* if(gamestatus == 0){
-    MsTimer2::set(100, display_StartingScreen);
+  if(gamestatus == 0){
+    MsTimer2::set(100, enterAnyKey);
     MsTimer2::start();
-  } */
+  }
 
   /* if(gamestatus == 1){
     MsTimer2::set(1000, setTime);
@@ -1167,11 +1156,8 @@ void loop() {
   if(gamestatus == -1) rtcLed();
 
   else if(gamestatus == 0){
-    enterAnyKey();
     display_StartingScreen();
-    if ( mouseIsActive ) {
-      gamestatus = 1;
-    }
+    MsTimer2::stop();
   }
   
   else if(gamestatus == 1){
