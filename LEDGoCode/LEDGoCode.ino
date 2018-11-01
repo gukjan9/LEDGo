@@ -8,7 +8,7 @@
 #define PIN            3
 
 #define PIXELS_ROWS 32
-#define PIXELS_COLUMNS 24
+#define PIXELS_COLUMNS 48
 #define PIXELS_COUNT 768 //PIXELS_ROWS * PIXELS_COLUMNS
 
 #define ROW 7
@@ -41,12 +41,10 @@ int lastSwitchState = LOW;        // previous switch state
 
 int colorPotPin = A0;
 
-
-
 void setup() {
   Serial.begin(9600);
   pixels.begin();
-  pixels.setBrightness(20);
+  pixels.setBrightness(10);
 
   pinMode(buttonPin1, INPUT);
   pinMode(buttonPin2, INPUT);
@@ -72,7 +70,7 @@ void loop() {
   if(gamestatus == -1) rtcLed();
 
   else if(gamestatus == 0){
-    LEDGoStart();
+    StartingScreen();
   }
   
   else if(gamestatus == 1){
@@ -81,7 +79,7 @@ void loop() {
   }
     
   if(gamestatus == 2){
-    displaySelectColor(1);        // 색깔 고른거 안고르게
+    displaySelectColor(1);        // 색깔 고른거 안고르게 해야함
     selectColorPlayer1();
   }
   else if(gamestatus == 3){
