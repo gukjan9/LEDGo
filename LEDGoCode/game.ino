@@ -6,38 +6,44 @@ int calcLED(int row, int col){
   int led = 0;
 
   if(odd){
-    if(col >= 1 && col <= 8){
+   if(col >= 1 && col <= 8){
       led = 8*row - col;
-      return led;
+      if(flag == 0) return led;
+      else return led+800;
     }
     else if(col >= 9 && col <= 16){
       led = 8*row - col + 264;
-      return led;
+      if(flag == 0) return led;
+      else return led+800;
     }
     else if(col >= 17 && col <= 24){
       led = 8*row - col + 528;
-      return led;
+      if(flag == 0) return led;
+      else return led+800;
     }
   }
+
   else{
     if(col >= 1 && col <= 8){
       led = 8*row + col - 9;
-      return led;
+      if(flag == 0) return led;
+      else return led+800;
     }
     else if(col >= 9 && col <= 16){
       led = 8*row + col - 9 + 248;
-      return led;
+      if(flag == 0) return led;
+      else return led+800;
     }
     else if(col >= 17 && col <= 24){
       led = 8*row + col - 9 + 496;
-      return led;
+      if(flag == 0) return led;
+      else return led+800;
     }
   }
 }
 
 int enterRow(){
   Serial.println("enterRow Start");
-  int buttoni;
   
   bt1 = digitalRead(buttonPin1);
   bt2 = digitalRead(buttonPin2);
@@ -56,40 +62,39 @@ int enterRow(){
     buttonState6=digitalRead(buttonPin6);
     buttonState7=digitalRead(buttonPin7);
 
-  if(bt1 !=0 && buttonState1==0){
+   if(bt1 !=0 && buttonState1==0){
     Serial.println("Button1 Pressed");
-    buttoni=0;
-    return buttoni;
+    if(flag == 0) return 0;
+    else return 6;
    }
    else if(bt2 !=0 && buttonState2==0){
     Serial.println("Button2 Pressed");
-    buttoni=1;
-    return buttoni;
+    if(flag == 0) return 1;
+    else return 5;
    }
    else if(bt3 !=0 && buttonState3==0){
     Serial.println("Button3 Pressed");
-    buttoni=2;
-    return buttoni;
+    if(flag == 0) return 2;
+    else return 4;
    }
    else if(bt4 !=0 && buttonState4==0){
     Serial.println("Button4 Pressed");
-    buttoni=3;
-    return buttoni;
+    return 3;
    }
    else if(bt5 !=0 && buttonState5==0){
     Serial.println("Button5 Pressed");
-    buttoni=4;
-    return buttoni;
+    if(flag == 0) return 4;
+    else return 2;
    }
    else if(bt6 !=0 && buttonState6==0){
     Serial.println("Button6 Pressed");
-    buttoni=5;
-    return buttoni;
+    if(flag == 0) return 5;
+    else return 1;
    }
    else if(bt7 !=0 && buttonState7==0){
     Serial.println("Button7 Pressed");
-    buttoni=6;
-    return buttoni;
+    if(flag == 0) return 6;
+    else return 0;
    }
 
    bt1=buttonState1;
@@ -176,26 +181,32 @@ void blockBlink(){
 
 void enterAnyKey(){
   Serial.println("enterAnyKey Start");
+  Serial.print("mouseIsActive : ");
+  Serial.println(mouseIsActive);
   int switchState = digitalRead (buttonPin1) | digitalRead (buttonPin2) | digitalRead (buttonPin3) 
                   | digitalRead (buttonPin4) | digitalRead (buttonPin5) | digitalRead (buttonPin6)| digitalRead (buttonPin7); // Press Any Key
   if (switchState != lastSwitchState) {
     if (switchState == HIGH) {
       Serial.println("Button Pressed");
       mouseIsActive = !mouseIsActive;
+      Serial.print("mouseIsActive : ");
+      Serial.println(mouseIsActive);
       MsTimer2::stop();
     }
   }
   lastSwitchState = switchState;
 }
 
-void LEDGoStart(){
-  Serial.println("LEDGoStart Start");
+void StartingScreen(){                  // 오프닝 화면
   MsTimer2::start();
-  
-  while(!mouseIsActive){
-  display_StartingScreen();
-  }
-  gamestatus = 1;
+  pixels.setBrightness(20);
+  display_LEDGo();
+  if(mouseIsActive == 0) dimmingLED();
+  else gamestatus = 1;
+  pixels.setBrightness(20);
+  display_PressAnyKey();
+  if(mouseIsActive == 0) dimmingLED();
+  else gamestatus = 1;
 }
 
 void selectColorPlayer1(){
@@ -284,7 +295,12 @@ void selectColorPlayer2(){
     }
     delay(100);
   }
-  gamestatus = 4;
+  if(colorPlayer1 == colorPlayer2){
+    Serial.println("Same Color Selected. Select Again");
+    gamestatus = 3;
+    mouseIsActive = !mouseIsActive;
+  }
+  else gamestatus = 4;
   Serial.println("selectColor End");
   MsTimer2::stop();
   clearPIXELS();
