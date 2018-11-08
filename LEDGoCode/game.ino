@@ -160,6 +160,8 @@ void blockBlink(){
       blockBlink();
     }
 
+  mp3Sound(4);
+
   if(flag == 0){
   while(top >= 4*j+1){
     showBlockcolor(4*i+1, top, colorPlayer1);
@@ -179,6 +181,27 @@ void blockBlink(){
   Serial.println("blockBlink END");
 }
 
+void mp3Sound(int i){
+  switch(i){
+    case 1 : Serial.println("0001 Insert Coin Sound");
+             mp3_play (1);  // insert coin
+             delay(1500);
+             break;
+    case 2 : Serial.println("0002 Player Ready");
+             mp3_play (2);  // Player Ready
+             delay(1500);
+             break;
+    case 3 : Serial.println("0003 Enter");
+             mp3_play (3);  // Button Enter Sound
+             delay(1500);
+             break;
+    case 4 : Serial.println("0004 Button Pressed");
+             mp3_play (4);  // Button Pressed
+             delay(1500);
+             break;
+  }
+}
+
 void enterAnyKey(){
   Serial.println("enterAnyKey Start");
   Serial.print("mouseIsActive : ");
@@ -189,6 +212,7 @@ void enterAnyKey(){
     if (switchState == HIGH) {
       Serial.println("Button Pressed");
       mouseIsActive = !mouseIsActive;
+      if(gamestatus == 0) mp3Sound(1);
       Serial.print("mouseIsActive : ");
       Serial.println(mouseIsActive);
       MsTimer2::stop();
@@ -249,6 +273,7 @@ void selectColorPlayer1(){
     }
     delay(100);
   }
+  mp3Sound(3);
   gamestatus = 3;
   Serial.println("selectColor End");
   MsTimer2::stop();
@@ -296,11 +321,15 @@ void selectColorPlayer2(){
     delay(100);
   }
   if(colorPlayer1 == colorPlayer2){
+    mp3Sound(3);
     Serial.println("Same Color Selected. Select Again");
     gamestatus = 3;
     mouseIsActive = !mouseIsActive;
   }
-  else gamestatus = 4;
+  else{
+    mp3Sound(3);
+    gamestatus = 4;
+  }
   Serial.println("selectColor End");
   MsTimer2::stop();
   clearPIXELS();
