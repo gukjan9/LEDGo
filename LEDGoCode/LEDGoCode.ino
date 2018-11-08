@@ -2,6 +2,8 @@
 #include <Adafruit_NeoMatrix.h>
 #include <Adafruit_NeoPixel.h>
 #include <MsTimer2.h>
+#include <SoftwareSerial.h>
+#include <DFPlayer_Mini_Mp3.h>
 #include <Wire.h>
 #include "RTClib.h"
 #include "game.h"
@@ -55,6 +57,9 @@ void setup() {
   pinMode(buttonPin7, INPUT);
 
   rtcFunc();
+  mp3_set_serial (Serial);  //set Serial for DFPlayer-mini mp3 module 
+  delay(1);  //wait 1ms for mp3 module to set volume
+  mp3_set_volume (10);
 
     MsTimer2::set(100, enterAnyKey);
 
