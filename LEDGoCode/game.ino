@@ -338,9 +338,116 @@ void selectColorPlayer2(){
   MsTimer2::stop();
 }
 
+void select_sw(){
+  int ch1_Read = digitalRead(48);
+  int ch2_Read = digitalRead(50);
+  int ch3_Read = digitalRead(52);
+  int a = 0;
+  int b = 0;
+  if(ch2_Read == 0 && ch1_Read == 1 && ch3_Read == 1){      //ch2는 밝기
+    while(!a){
+      swstate1=digitalRead(48);
+      swstate2=digitalRead(50);
+      swstate3=digitalRead(52);
+    
+      int lux=analogRead(A10);
+      lux = map(lux,0,1023,0,39);
+      pixels.setBrightness(lux);
+      pixels.show();
+      delay(70);
+
+      Serial.print("a = ");
+      Serial.println(a);
+      delay(500);       
+      if(//swstate1==1&&swstate2==1&&swstate3==1
+        (ch1_Read==1&&swstate1==0 &&ch2_Read==0&&swstate2==1&&ch3_Read==1&&swstate3==1)||             //ch2->ch1
+        (ch1_Read==1&&swstate1==1 &&ch2_Read==0&&swstate2==1&&ch3_Read==1&&swstate3==0)||           //ch2->ch3 
+        (ch1_Read==0&&swstate1==1 &&ch2_Read==1&&swstate2==0&&ch3_Read==1&&swstate3==1)||             //ch1->ch2
+        (ch1_Read==1&&swstate1==1 &&ch2_Read==1&&swstate2==0&&ch3_Read==0&&swstate3==1)){             //ch3->ch2
+    
+      Serial.print("sw1 ");
+      Serial.println(swstate1);
+      Serial.print("sw2 ");
+      Serial.println(swstate2);
+      Serial.print("sw3 ");
+      Serial.println(swstate3);
+      
+      a = 0;
+      }       
+    else if((ch1_Read==0&&swstate1==1 &&ch2_Read==1&&swstate2==1&&ch3_Read==1&&swstate3==1)||        //ch1->ch0 
+            (ch1_Read==1&&swstate1==1 &&ch2_Read==0&&swstate2==1&&ch3_Read==1&&swstate3==1)||        //ch2->ch0
+            (ch1_Read==1&&swstate1==1 &&ch2_Read==1&&swstate2==1&&ch3_Read==0&&swstate3==1)){        //ch3->ch0 
+    
+    Serial.print("sw1 ");
+    Serial.println(swstate1);
+    Serial.print("sw2 ");
+    Serial.println(swstate2);
+    Serial.print("sw3 ");
+    Serial.println(swstate3);
+    a = 1;
+    }
+    ch1_Read=swstate1;
+    ch2_Read=swstate2;
+    ch3_Read=swstate3;
+    }
+  }
+
+  else if(ch3_Read == 0 && ch1_Read == 1 && ch2_Read == 1){
+    while(!b){
+     swstate1=digitalRead(48);
+     swstate2=digitalRead(50);
+     swstate3=digitalRead(52);
+    
+    int sound=analogRead(A11);
+    sound = map(sound,0,1023,0,29);
+    mp3_set_volume (sound);
+    delay(70);
+
+    Serial.print("b = ");
+    Serial.println(b);
+    delay(500);
+    
+    if((ch1_Read==1&&swstate1==1 &&ch2_Read==1&&swstate2==0&&ch3_Read==0&&swstate3==1)||             //ch3->ch2
+       (ch1_Read==1&&swstate1==0 &&ch2_Read==1&&swstate2==1&&ch3_Read==0&&swstate3==1)||                //ch3->ch1 
+       (ch1_Read==1&&swstate1==0 &&ch2_Read==0&&swstate2==1&&ch3_Read==1&&swstate3==1)||                //ch2->ch1
+       (ch1_Read==0&&swstate1==1 &&ch2_Read==1&&swstate2==1&&ch3_Read==1&&swstate3==0)){                //ch1->ch3
+    Serial.print("sw1 ");
+    Serial.println(swstate1);
+    Serial.print("sw2 ");
+    Serial.println(swstate2);
+    Serial.print("sw3 ");
+    Serial.println(swstate3);
+    b = 0;
+      }    
+     else if((ch1_Read==0&&swstate1==1 &&ch2_Read==1&&swstate2==1&&ch3_Read==1&&swstate3==1)||        //ch1->ch0 
+            (ch1_Read==1&&swstate1==1 &&ch2_Read==0&&swstate2==1&&ch3_Read==1&&swstate3==1)||        //ch2->ch0
+            (ch1_Read==1&&swstate1==1 &&ch2_Read==1&&swstate2==1&&ch3_Read==0&&swstate3==1)){        //ch3->ch0 
+      
+    Serial.print("sw1 ");
+    Serial.println(swstate1);
+    Serial.print("sw2 ");
+    Serial.println(swstate2);
+    Serial.print("sw3 ");
+    Serial.println(swstate3);
+    b = 1;
+    }
+    ch1_Read=swstate1;
+    ch2_Read=swstate2;
+    ch3_Read=swstate3;
+    }
+  }
+}
+
 void endGame(){
-  flag = 1; // enterRow refresh
+  flag = 0; // enterRow refresh
   Serial.println("Continue or Quit?");
+
+  int ranColor = notPrevRandomColor(1);         // Quit always RED
+  Serial.print("ranColor : ");
+  Serial.println(ranColor);
+
+  display_Continue(colors[ranColor]);
+  display_Quit(C1);
   
   int button = enterRow();
 
@@ -362,5 +469,10 @@ void endGame(){
 }
 
 void initializeGame(){
-  
+  pixelarrayInit();
+  e1, e2, e3, e4, e5, e6, e7 = 0;
+  colorPlayer1, colorPlayer2 = C0;
+  player1, player2 = 0;
+  mouseIsActive = false;
+  lastSwitchState = LOW;
 }
