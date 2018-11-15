@@ -1,6 +1,3 @@
-uint32_t colorPlayer1;
-uint32_t colorPlayer2;
-
 int calcLED(int row, int col){
   int odd = row%2;
   int led = 0;
@@ -8,36 +5,42 @@ int calcLED(int row, int col){
   if(odd){
    if(col >= 1 && col <= 8){
       led = 8*row - col;
-      if(flag == 0) return led;
-      else return led+800;
+      /* if(flag == 0) return led;
+      else return led+800; */
+      return led;
     }
     else if(col >= 9 && col <= 16){
       led = 8*row - col + 264;
-      if(flag == 0) return led;
-      else return led+800;
+      /* if(flag == 0) return led;
+      else return led+800; */
+      return led;
     }
     else if(col >= 17 && col <= 24){
       led = 8*row - col + 528;
-      if(flag == 0) return led;
-      else return led+800;
+      /* if(flag == 0) return led;
+      else return led+800; */
+      return led;
     }
   }
 
   else{
     if(col >= 1 && col <= 8){
       led = 8*row + col - 9;
-      if(flag == 0) return led;
-      else return led+800;
+      /* if(flag == 0) return led;
+      else return led+800; */
+      return led;
     }
     else if(col >= 9 && col <= 16){
       led = 8*row + col - 9 + 248;
-      if(flag == 0) return led;
-      else return led+800;
+      /* if(flag == 0) return led;
+      else return led+800; */
+      return led;
     }
     else if(col >= 17 && col <= 24){
       led = 8*row + col - 9 + 496;
-      if(flag == 0) return led;
-      else return led+800;
+      /* if(flag == 0) return led;
+      else return led+800; */
+      return led;
     }
   }
 }
@@ -62,7 +65,7 @@ int enterRow(){
     buttonState6=digitalRead(buttonPin6);
     buttonState7=digitalRead(buttonPin7);
 
-   if(bt1 !=0 && buttonState1==0){
+   if(bt1 !=0 && buttonState1==0){          // bt1 != 1 && buttonState1 == 0
     Serial.println("Button1 Pressed");
     if(flag == 0) return 0;
     else return 6;
@@ -329,8 +332,35 @@ void selectColorPlayer2(){
   else{
     mp3Sound(3);
     gamestatus = 4;
+    clearPIXELS();
   }
   Serial.println("selectColor End");
   MsTimer2::stop();
-  clearPIXELS();
+}
+
+void endGame(){
+  flag = 1; // enterRow refresh
+  Serial.println("Continue or Quit?");
+  
+  int button = enterRow();
+
+  if(button == 0){
+    Serial.println("Continue");
+    display_Quit(0);
+    delay(2000);
+    clearPIXELS();
+    gamestatus = 2;
+  }
+  else if(button == 6){
+    Serial.println("Quit");
+    display_Continue(0);
+    delay(2000);
+    clearPIXELS();
+    gamestatus = 0;
+  }
+  else endGame();
+}
+
+void initializeGame(){
+  
 }
