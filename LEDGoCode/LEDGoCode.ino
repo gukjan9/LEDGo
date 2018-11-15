@@ -23,7 +23,7 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(96, 8, PIN,
   NEO_MATRIX_COLUMNS + NEO_MATRIX_SEQUENCE,
   NEO_GRB            + NEO_KHZ800);
   
-const uint16_t colors[] = {
+const uint16_t Mcolors[] = {
   matrix.Color(255, 0, 0), matrix.Color(0, 255, 0), matrix.Color(255, 255, 0),matrix.Color(0, 0, 255), matrix.Color(255, 0, 255), matrix.Color(0, 255, 255), matrix.Color(255, 255, 255)};
 int x = matrix.width();
 
@@ -56,6 +56,10 @@ void setup() {
   pinMode(buttonPin6, INPUT);
   pinMode(buttonPin7, INPUT);
 
+  pinMode(ch1, INPUT_PULLUP);
+  pinMode(ch2, INPUT_PULLUP);
+  pinMode(ch3, INPUT_PULLUP);
+
   rtcFunc();
   mp3_set_serial (Serial);  //set Serial for DFPlayer-mini mp3 module 
   delay(1);  //wait 1ms for mp3 module to set volume
@@ -77,26 +81,26 @@ void loop() {
   else if(gamestatus == 0){
     StartingScreen();
   }
-  /* else if(gamestatus == 1){
+  else if(gamestatus == 1){
     displayPlayer(1);
     enterPlayer();
   }
   if(gamestatus == 2){
-    displaySelectColor(1);        // 색깔 고른거 안고르게 해야함
+    displaySelectColor(1);
     selectColorPlayer1();
   }
   else if(gamestatus == 3){
     displaySelectColor(2);
     selectColorPlayer2();
-  } */
-  else if(gamestatus == 1){
+  }
+  else if(gamestatus == 4){
     blockBlink();
     WinCheckField_Data();
+    select_sw();
   }
   else if(gamestatus == 5){
     display_WinLose();
-    display_Continue(color1);
-    display_Quit(color2);
     endGame();
+    initializeGame();
   }
 }
