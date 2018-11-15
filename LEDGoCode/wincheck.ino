@@ -22,6 +22,10 @@ void right_1(){                        //우3
       showBlockcolor(4*(a+1)+1, 4*b+1, color3);
       showBlockcolor(4*(a+2)+1, 4*b+1, color3);
       showBlockcolor(4*(a+3)+1, 4*b+1, color3);
+      blinkWinBlock(4*a+1, 4*(a+1)+1, 4*(a+2)+1, 4*(a+3)+1, 4*b+1, 4*b+1, 4*b+1, 4*b+1, color3);
+      gamestatus = 5;
+      Serial.println("Game End");
+      Serial.println("***********************************");
     }
 }
 
@@ -41,6 +45,10 @@ void right_2(){                      //좌1우2
       showBlockcolor(4*a+1, 4*b+1, color3);
       showBlockcolor(4*(a+1)+1, 4*b+1, color3);
       showBlockcolor(4*(a+2)+1, 4*b+1, color3);
+      blinkWinBlock(4*(a-1)+1, 4*a+1, 4*(a+1)+1, 4*(a+2)+1, 4*b+1, 4*b+1, 4*b+1, 4*b+1, color3);
+      gamestatus = 5;
+      Serial.println("Game End");
+      Serial.println("***********************************");
    }
 }
 
@@ -60,6 +68,10 @@ void right_3(){                      //좌2우1
       showBlockcolor(4*(a-1)+1, 4*b+1, color3);
       showBlockcolor(4*a+1, 4*b+1, color3);
       showBlockcolor(4*(a+1)+1, 4*b+1, color3);
+      blinkWinBlock(4*(a-2)+1, 4*(a-1)+1, 4*a+1, 4*(a+1)+1, 4*b+1, 4*b+1, 4*b+1, 4*b+1, color3);
+      gamestatus = 5;
+      Serial.println("Game End");
+      Serial.println("***********************************");
    }
 }
 
@@ -79,6 +91,10 @@ void right_4(){                      //좌3
       showBlockcolor(4*(a-2)+1, 4*b+1, color3);
       showBlockcolor(4*(a-1)+1, 4*b+1, color3);
       showBlockcolor(4*a+1, 4*b+1, color3);
+      blinkWinBlock(4*(a-3)+1, 4*(a-2)+1, 4*(a-1)+1, 4*a+1, 4*b+1, 4*b+1, 4*b+1, 4*b+1, color3);
+      gamestatus = 5;
+      Serial.println("Game End");
+      Serial.println("***********************************");
    }
 }
 
@@ -98,6 +114,10 @@ void bottom(){                       //하3
       showBlockcolor(4*a+1, 4*(b-1)+1, color3);
       showBlockcolor(4*a+1, 4*(b-2)+1, color3);
       showBlockcolor(4*a+1, 4*(b-3)+1, color3);
+      blinkWinBlock(4*a+1, 4*a+1, 4*a+1, 4*a+1, 4*b+1, 4*(b-1)+1, 4*(b-2)+1, 4*(b-3)+1, color3);
+      gamestatus = 5;
+      Serial.println("Game End");
+      Serial.println("***********************************");
    }
 }
 
@@ -118,6 +138,10 @@ void r_upcross_1(){                    //우상3
       showBlockcolor(4*(a+1)+1, 4*(b+1)+1, color3);
       showBlockcolor(4*(a+2)+1, 4*(b+2)+1, color3);
       showBlockcolor(4*(a+3)+1, 4*(b+3)+1, color3);
+      blinkWinBlock(4*a+1, 4*(a+1)+1, 4*(a+2)+1, 4*(a+3)+1, 4*b+1, 4*(b+1)+1, 4*(b+2)+1, 4*(b+3)+1, color3);
+      gamestatus = 5;
+      Serial.println("Game End");
+      Serial.println("***********************************");
    }
 }
 
@@ -138,6 +162,10 @@ void r_upcross_2(){                  //좌하1우상2
       showBlockcolor(4*a+1, 4*b+1, color3);
       showBlockcolor(4*(a+1)+1, 4*(b+1)+1, color3);
       showBlockcolor(4*(a+2)+1, 4*(b+2)+1, color3);
+      blinkWinBlock(4*(a-1)+1, 4*a+1, 4*(a+1)+1, 4*(a+2)+1, 4*(b-1)+1, 4*b+1, 4*(b+1)+1, 4*(b+2)+1, color3);
+      gamestatus = 5;
+      Serial.println("Game End");
+      Serial.println("***********************************");
    }
 }
 
@@ -158,6 +186,10 @@ void r_upcross_3(){                  //좌하2우상1
       showBlockcolor(4*(a-1)+1, 4*(b-1)+1, color3);
       showBlockcolor(4*a+1, 4*b+1, color3);
       showBlockcolor(4*(a+1)+1, 4*(b+1)+1, color3);
+      blinkWinBlock(4*(a-2)+1, 4*(a-1)+1, 4*a+1, 4*(a+1)+1, 4*(b-2)+1, 4*(b-1)+1, 4*b+1, 4*(b+1)+1, color3);
+      gamestatus = 5;
+      Serial.println("Game End");
+      Serial.println("***********************************");
    }
 }
 
@@ -178,6 +210,10 @@ void r_upcross_4(){                  //좌하3
       showBlockcolor(4*(a-2)+1, 4*(b-2)+1, color3);
       showBlockcolor(4*(a-1)+1, 4*(b-1)+1, color3);
       showBlockcolor(4*a+1, 4*b+1, color3);
+      blinkWinBlock(4*(a-3)+1, 4*(a-2)+1, 4*(a-1)+1, 4*a+1, 4*(b-3)+1, 4*(b-2)+1, 4*(b-1)+1, 4*b+1, color3);
+      gamestatus = 5;
+      Serial.println("Game End");
+      Serial.println("***********************************");
    }
 }
 
@@ -198,6 +234,10 @@ void r_downcross_1(){                  //우하3
       showBlockcolor(4*(a+1)+1, 4*(b-1)+1, color3);
       showBlockcolor(4*(a+2)+1, 4*(b-2)+1, color3);
       showBlockcolor(4*(a+3)+1, 4*(b-3)+1, color3);
+      blinkWinBlock(4*a+1, 4*(a+1)+1, 4*(a+2)+1, 4*(a+3)+1, 4*b+1, 4*(b-1)+1, 4*(b-2)+1, 4*(b-3)+1, color3);
+      gamestatus = 5;
+      Serial.println("Game End");
+      Serial.println("***********************************");
    }
 }
 
@@ -218,6 +258,10 @@ void r_downcross_2(){                //좌상1우하2
       showBlockcolor(4*a+1, 4*b+1, color3);
       showBlockcolor(4*(a+1)+1, 4*(b-1)+1, color3);
       showBlockcolor(4*(a+2)+1, 4*(b-2)+1, color3);
+      blinkWinBlock(4*(a-1)+1, 4*a+1, 4*(a+1)+1, 4*(a+2)+1, 4*(b+1)+1, 4*b+1, 4*(b-1)+1, 4*(b-2)+1, color3);
+      gamestatus = 5;
+      Serial.println("Game End");
+      Serial.println("***********************************");
   }
 }
 
@@ -238,6 +282,10 @@ void r_downcross_3(){                //좌상2우하1
       showBlockcolor(4*(a-1)+1, 4*(b+1)+1, color3);
       showBlockcolor(4*a+1, 4*b+1, color3);
       showBlockcolor(4*(a+1)+1, 4*(b-1)+1, color3);
+      blinkWinBlock(4*(a-2)+1, 4*(a-1)+1, 4*a+1, 4*(a+1)+1, 4*(b+2)+1, 4*(b+1)+1, 4*b+1, 4*(b-1)+1, color3);
+      gamestatus = 5;
+      Serial.println("Game End");
+      Serial.println("***********************************");
   }
 }
 
@@ -258,6 +306,10 @@ void r_downcross_4(){                //좌상3
       showBlockcolor(4*(a-2)+1, 4*(b+2)+1, color3);
       showBlockcolor(4*(a-1)+1, 4*(b+1)+1, color3);
       showBlockcolor(4*a+1, 4*b+1, color3);
+      blinkWinBlock(4*(a-3)+1, 4*(a-2)+1, 4*(a-1)+1, 4*a+1, 4*(b+3)+1, 4*(b+2)+1, 4*(b+1)+1, 4*b+1, color3);
+      gamestatus = 5;
+      Serial.println("Game End");
+      Serial.println("***********************************");
    }
 }
 
