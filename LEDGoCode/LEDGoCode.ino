@@ -41,7 +41,7 @@ int player2 = 0;
 boolean mouseIsActive = false;    // whether or not to control the mouse
 int lastSwitchState = LOW;        // previous switch state
 
-int colorPotPin = A0;
+int colorPotPin = A9;
 
 void setup() {
   Serial.begin(9600);
@@ -77,12 +77,10 @@ void loop() {
   else if(gamestatus == 0){
     StartingScreen();
   }
-  
-  else if(gamestatus == 1){
+  /* else if(gamestatus == 1){
     displayPlayer(1);
     enterPlayer();
   }
-    
   if(gamestatus == 2){
     displaySelectColor(1);        // 색깔 고른거 안고르게 해야함
     selectColorPlayer1();
@@ -90,9 +88,15 @@ void loop() {
   else if(gamestatus == 3){
     displaySelectColor(2);
     selectColorPlayer2();
-  }
-  else if(gamestatus == 4){
+  } */
+  else if(gamestatus == 1){
     blockBlink();
     WinCheckField_Data();
+  }
+  else if(gamestatus == 5){
+    display_WinLose();
+    display_Continue(color1);
+    display_Quit(color2);
+    endGame();
   }
 }
