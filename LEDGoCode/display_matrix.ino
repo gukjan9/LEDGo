@@ -12,6 +12,18 @@ void clearPIXELS(){
   }
 }
 
+int notPrevRandomColor(int previous){         // Not same previous random color 
+  int min = 0;
+  int max = 12;
+  int color = random(0, 12);
+  
+  if(previous == color){
+    Serial.println("Same Color Selected");
+    notPrevRandomColor(previous);
+  }
+  else return color;
+}
+
 void showBlockcolor(int i, int j, uint32_t color){
   int ledarr[9] = {calcLED(i,j), calcLED(i,j+1), calcLED(i,j+2), calcLED(i+1,j), calcLED(i+1,j+1), calcLED(i+1,j+2), calcLED(i+2,j), calcLED(i+2,j+1), calcLED(i+2,j+2)};
   
@@ -212,7 +224,7 @@ void display_5Alphabet(char alphabet, int textRow, int textCol, uint32_t color){
 void display_Firework(int i, uint32_t color){
   int j;
   for(j=1; j<=12; j++){                             // l자 Firework
-    display_PixelColor(calcLED(i+3,j), color);
+    display_PixelColor(calcLED(i+3,j), C0);
     delay(40);
     display_PixelColor(calcLED(i+3,j), 0);
   }
@@ -250,33 +262,33 @@ void display_Firework(int i, uint32_t color){
 
 void display_LEDGo(){
   Serial.println("Welcome to LEDGo!");
-  if(!mouseIsActive) display_Firework(2, color3);
-  if(!mouseIsActive) display_5Alphabet('L', 2, 1, color1);
-  if(!mouseIsActive) display_Firework(8, color3);
-  if(!mouseIsActive) display_5Alphabet('E', 8, 1, color1);
-  if(!mouseIsActive) display_Firework(14, color3);
-  if(!mouseIsActive) display_5Alphabet('D', 14, 1, color1);
-  if(!mouseIsActive) display_Firework(20, color3);
-  if(!mouseIsActive) display_5Alphabet('G', 20, 1, color1);
-  if(!mouseIsActive) display_Firework(26, color3);
-  if(!mouseIsActive) display_5Alphabet('O', 26, 1, color1);
+  if(!mouseIsActive) display_Firework(2, C1);
+  if(!mouseIsActive) display_5Alphabet('L', 2, 1, C1);
+  if(!mouseIsActive) display_Firework(8, C7);
+  if(!mouseIsActive) display_5Alphabet('E', 8, 1, C7);
+  if(!mouseIsActive) display_Firework(14, C2);
+  if(!mouseIsActive) display_5Alphabet('D', 14, 1, C2);
+  if(!mouseIsActive) display_Firework(20, C8);
+  if(!mouseIsActive) display_5Alphabet('G', 20, 1, C8);
+  if(!mouseIsActive) display_Firework(26, C9);
+  if(!mouseIsActive) display_5Alphabet('O', 26, 1, C9);
 }
 
 void display_PressAnyKey(){
   Serial.println("Press Any Key to Start");
-  if(!mouseIsActive) display_5Alphabet('P', 2, 2, color1);
-  if(!mouseIsActive) display_5Alphabet('R', 8, 2, color1);
-  if(!mouseIsActive) display_5Alphabet('E', 14, 2, color1);
-  if(!mouseIsActive) display_5Alphabet('S', 20, 2, color1);
-  if(!mouseIsActive) display_5Alphabet('S', 26, 2, color1);
+  if(!mouseIsActive) display_5Alphabet('P', 2, 2, C1);
+  if(!mouseIsActive) display_5Alphabet('R', 8, 2, C7);
+  if(!mouseIsActive) display_5Alphabet('E', 14, 2, C2);
+  if(!mouseIsActive) display_5Alphabet('S', 20, 2, C8);
+  if(!mouseIsActive) display_5Alphabet('S', 26, 2, C3);
 
-  if(!mouseIsActive) display_5Alphabet('A', 8, 1, color1);
-  if(!mouseIsActive) display_5Alphabet('N', 14, 1, color1);
-  if(!mouseIsActive) display_5Alphabet('Y', 20, 1, color1);
+  if(!mouseIsActive) display_5Alphabet('A', 8, 1, C4);
+  if(!mouseIsActive) display_5Alphabet('N', 14, 1, C9);
+  if(!mouseIsActive) display_5Alphabet('Y', 20, 1, C5);
 
-  if(!mouseIsActive) display_5Alphabet('K', 8, 0, color1);
-  if(!mouseIsActive) display_5Alphabet('E', 14, 0, color1);
-  if(!mouseIsActive) display_5Alphabet('Y', 20, 0, color1);
+  if(!mouseIsActive) display_5Alphabet('K', 8, 0, C0);
+  if(!mouseIsActive) display_5Alphabet('E', 14, 0, C0);
+  if(!mouseIsActive) display_5Alphabet('Y', 20, 0, C0);
 }
 
 void dimmingLED(){
@@ -296,14 +308,22 @@ void displayPlayer(int player){
   pixels.show();
   Serial.print("Waiting for Player ");
   Serial.println(player);
-  display_4Alphabet('P', 1, 2, color1);
-  display_4Alphabet('L', 6, 2, color1);
-  display_4Alphabet('A', 11, 2, color1);
-  display_4Alphabet('Y', 16, 2, color1);
-  display_4Alphabet('E', 21, 2, color1);
-  display_4Alphabet('R', 26, 2, color1);
+  
+  int ranColor1 = random(0, 12);
+  Serial.print("Player Color : ");
+  Serial.println(ranColor1);
+  int ranColor2 = notPrevRandomColor(ranColor1);
+  Serial.print("Player Number Color : ");
+  Serial.println(ranColor2);
+  
+  display_4Alphabet('P', 1, 2, colors[ranColor1]);
+  display_4Alphabet('L', 6, 2, colors[ranColor1]);
+  display_4Alphabet('A', 11, 2, colors[ranColor1]);
+  display_4Alphabet('Y', 16, 2, colors[ranColor1]);
+  display_4Alphabet('E', 21, 2, colors[ranColor1]);
+  display_4Alphabet('R', 26, 2, colors[ranColor1]);
 
-  display_5Alphabet('1', 12, 1, color1);
+  display_5Alphabet('1', 12, 1, colors[ranColor2]);
 }
 
 void displayReady(int player){
@@ -311,11 +331,11 @@ void displayReady(int player){
   Serial.print(player);
   Serial.println(" is Ready !");
   mp3Sound(2);
-  display_5Alphabet('R', 0, 0, color1);
-  display_5Alphabet('E', 6, 0, color1);
-  display_5Alphabet('A', 12, 0, color1);
-  display_5Alphabet('D', 18, 0, color1);
-  display_5Alphabet('Y', 24, 0, color1);
+  display_5Alphabet('R', 0, 0, C1);
+  display_5Alphabet('E', 6, 0, C7);
+  display_5Alphabet('A', 12, 0, C2);
+  display_5Alphabet('D', 18, 0, C8);
+  display_5Alphabet('Y', 24, 0, C9);
 }
 
 void displaySelectColor(int player){
@@ -323,18 +343,25 @@ void displaySelectColor(int player){
   Serial.print(player);
   Serial.println(" Color");
 
-  display_4Alphabet('S', 1, 2, color1);
-  display_4Alphabet('E', 6, 2, color1);
-  display_4Alphabet('L', 11, 2, color1);
-  display_4Alphabet('E', 16, 2, color1);
-  display_4Alphabet('C', 21, 2, color1);
-  display_4Alphabet('T', 26, 2, color1);
+  int ranColor1 = random(0, 12);
+  Serial.print("ranColor1 : ");
+  Serial.println(ranColor1);
+  int ranColor2 = notPrevRandomColor(ranColor1);
+  Serial.print("ranColor2 : ");
+  Serial.println(ranColor2);
 
-  display_5Alphabet('C', 0, 1, color1);
-  display_5Alphabet('O', 6, 1, color1);
-  display_5Alphabet('L', 12, 1, color1);
-  display_5Alphabet('O', 18, 1, color1);
-  display_5Alphabet('R', 24, 1, color1);
+  display_4Alphabet('S', 1, 2, colors[ranColor1]);
+  display_4Alphabet('E', 6, 2, colors[ranColor1]);
+  display_4Alphabet('L', 11, 2, colors[ranColor1]);
+  display_4Alphabet('E', 16, 2, colors[ranColor1]);
+  display_4Alphabet('C', 21, 2, colors[ranColor1]);
+  display_4Alphabet('T', 26, 2, colors[ranColor1]);
+
+  display_5Alphabet('C', 0, 1, colors[ranColor2]);
+  display_5Alphabet('O', 6, 1, colors[ranColor2]);
+  display_5Alphabet('L', 12, 1, colors[ranColor2]);
+  display_5Alphabet('O', 18, 1, colors[ranColor2]);
+  display_5Alphabet('R', 24, 1, colors[ranColor2]);
 }
 
 void blinkWinBlock(int A, int B, int C, int D, int a, int b, int c, int d, uint32_t color){
