@@ -32,4 +32,22 @@ int e4 = 0;
 int e5 = 0;
 int e6 = 0;
 int e7 = 0;
+
+uint32_t C0 = 0xFFFFFF; //White
+uint32_t C1 = 0xFF0000; //Red
+uint32_t C2 = 0xFFFF00; //Yellow
+uint32_t C3 = 0x00FF00; //Green
+uint32_t C4 = 0x00FFFF; //Cyan
+uint32_t C5 = 0x0000FF; //Blue
+uint32_t C6 = 0xFF00FF; //Magenta
+
+uint32_t MyColors[7] = {C0, C1, C2, C3, C4, C5, C6}; //put the colors in an array
+
+uint32_t color2 = MyColors[1];
+uint32_t color1 = MyColors[2];
+uint32_t color3 = MyColors[6];
+
+uint32_t colorPlayer1 = color1;
+uint32_t colorPlayer2 = color2;
+
 #endif 
