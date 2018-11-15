@@ -1,17 +1,3 @@
-uint32_t C0 = 0xFFFFFF; //White
-uint32_t C1 = 0xFF0000; //Red
-uint32_t C2 = 0xFFFF00; //Yellow
-uint32_t C3 = 0x00FF00; //Green
-uint32_t C4 = 0x00FFFF; //Cyan
-uint32_t C5 = 0x0000FF; //Blue
-uint32_t C6 = 0xFF00FF; //Magenta
-
-uint32_t MyColors[7] = {C0, C1, C2, C3, C4, C5, C6}; //put the colors in an array
-
-uint32_t color2 = MyColors[1];
-uint32_t color1 = MyColors[2];
-uint32_t color3 = MyColors[6];
-
 void display_PixelColor(int led, uint32_t color) {
       pixels.setPixelColor(led, color);
       //pixels.setPixelColor(led+768, color);
@@ -30,23 +16,23 @@ void showBlockcolor(int i, int j, uint32_t color){
   int ledarr[9] = {calcLED(i,j), calcLED(i,j+1), calcLED(i,j+2), calcLED(i+1,j), calcLED(i+1,j+1), calcLED(i+1,j+2), calcLED(i+2,j), calcLED(i+2,j+1), calcLED(i+2,j+2)};
   
   display_PixelColor(ledarr[0], color);
-  display_PixelColor(ledarr[0]+800, color);
+  //display_PixelColor(ledarr[0]+800, color);
   display_PixelColor(ledarr[1], color);
-  display_PixelColor(ledarr[1]+800, color);
+  //display_PixelColor(ledarr[1]+800, color);
   display_PixelColor(ledarr[2], color);
-  display_PixelColor(ledarr[2]+800, color);
+  //display_PixelColor(ledarr[2]+800, color);
   display_PixelColor(ledarr[3], color);
-  display_PixelColor(ledarr[3]+800, color);
+  //display_PixelColor(ledarr[3]+800, color);
   display_PixelColor(ledarr[4], color);
-  display_PixelColor(ledarr[4]+800, color);
+  //display_PixelColor(ledarr[4]+800, color);
   display_PixelColor(ledarr[5], color);
-  display_PixelColor(ledarr[5]+800, color);
+  //display_PixelColor(ledarr[5]+800, color);
   display_PixelColor(ledarr[6], color);
-  display_PixelColor(ledarr[6]+800, color);
+  //display_PixelColor(ledarr[6]+800, color);
   display_PixelColor(ledarr[7], color);
-  display_PixelColor(ledarr[7]+800, color);
+  //display_PixelColor(ledarr[7]+800, color);
   display_PixelColor(ledarr[8], color);
-  display_PixelColor(ledarr[8]+800, color);
+  //display_PixelColor(ledarr[8]+800, color);
 }
 
 int Quotient(int x, int y){               // 몫 함수
@@ -349,4 +335,67 @@ void displaySelectColor(int player){
   display_5Alphabet('L', 12, 1, color1);
   display_5Alphabet('O', 18, 1, color1);
   display_5Alphabet('R', 24, 1, color1);
+}
+
+void blinkWinBlock(int A, int B, int C, int D, int a, int b, int c, int d, uint32_t color){
+  Serial.println("blinkWinBlock Start");
+  MsTimer2::start();
+  
+  while(mouseIsActive){
+    Serial.println("Blinking Win Block...");
+    showBlockcolor(A, a, 0);
+    showBlockcolor(B, b, 0);
+    showBlockcolor(C, c, 0);
+    showBlockcolor(D, d, 0);
+    delay(500);
+    showBlockcolor(A, a, color);
+    showBlockcolor(B, b, color);
+    showBlockcolor(C, c, color);
+    showBlockcolor(D, d, color);
+  }
+  Serial.println("blinkWinBlock End");
+}
+
+void display_WinLose(){
+  clearPIXELS();
+  if(flag == 1){
+    Serial.println("Player 1 WIN !");
+    display_5Alphabet('L', 5, 4, colorPlayer2);
+    display_5Alphabet('W', 8, 1, colorPlayer1);
+    display_5Alphabet('O', 11, 4, colorPlayer2);
+    display_5Alphabet('I', 14, 1, colorPlayer1);
+    display_5Alphabet('S', 17, 4, colorPlayer2);
+    display_5Alphabet('N', 20, 1, colorPlayer1);
+    display_5Alphabet('E', 23, 4, colorPlayer2);
+  }
+  else{
+    Serial.println("Player 2 WIN !");
+    display_5Alphabet('L', 5, 1, colorPlayer1);
+    display_5Alphabet('W', 8, 4, colorPlayer2);
+    display_5Alphabet('O', 11, 1, colorPlayer1);
+    display_5Alphabet('I', 14, 4, colorPlayer2);
+    display_5Alphabet('S', 17, 1, colorPlayer1);
+    display_5Alphabet('N', 20, 4, colorPlayer2);
+    display_5Alphabet('E', 23, 1, colorPlayer1);
+  }
+  delay(10000);
+  clearPIXELS();
+}
+
+void display_Continue(uint32_t color){
+  display_4Alphabet('C', 1, 1, color);
+  display_4Alphabet('O', 6, 1, color);
+  display_4Alphabet('N', 11, 1, color);
+  display_4Alphabet('T', 16, 1, color);
+  display_4Alphabet('I', 1, 0, color);
+  display_4Alphabet('N', 6, 0, color);
+  display_4Alphabet('U', 11, 0, color);
+  display_4Alphabet('E', 16, 0, color);
+}
+
+void display_Quit(uint32_t color){
+  display_4Alphabet('Q', 21, 1, color);
+  display_4Alphabet('U', 26, 1, color);
+  display_4Alphabet('I', 21, 0, color);
+  display_4Alphabet('T', 26, 0, color);
 }
