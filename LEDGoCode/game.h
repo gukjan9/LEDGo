@@ -1,13 +1,33 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 
-const int buttonPin1 = 22;
-const int buttonPin2 = 24;
-const int buttonPin3 = 26;
-const int buttonPin4 = 28;
-const int buttonPin5 = 30;
-const int buttonPin6 = 32;
-const int buttonPin7 = 34;
+const int buttonPin1 = 23;
+const int buttonPin2 = 25;
+const int buttonPin3 = 27;
+const int buttonPin4 = 29;
+const int buttonPin5 = 31;
+const int buttonPin6 = 33;
+const int buttonPin7 = 35;
+
+const int btnLedPin1 = 39;
+const int btnLedPin2 = 41;
+const int btnLedPin3 = 43;
+const int btnLedPin4 = 45;
+const int btnLedPin5 = 47;
+const int btnLedPin6 = 49;
+const int btnLedPin7 = 51;
+
+int colorPotPin = A0;
+int brightPotPin = A1;
+int volumePotPin = A2;
+
+int displaymode = 0;
+int gamestatus = 0;
+int player1 = 0;
+int player2 = 0;
+
+boolean mouseIsActive = false;    // whether or not to control the mouse
+int lastSwitchState = LOW;        // previous switch state
 
 int buttonState1 = 0;
 int buttonState2 = 0;
@@ -32,6 +52,12 @@ int ch3 = 52;
 int swstate1 = 0;
 int swstate2 = 0;
 int swstate3 = 0;
+
+int globalRow;
+
+boolean flag=0;
+unsigned char e[8];
+
 
 int e1 = 0;
 int e2 = 0;
@@ -58,10 +84,6 @@ uint32_t C9 = 0x0080FF; //Light Blue
 uint32_t C10 = 0x7F00FF; //Purple
 
 uint32_t colors[11] = {C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10}; //put the colors in an array
-
-uint32_t color2 = colors[1];
-uint32_t color1 = colors[2];
-uint32_t color3 = colors[6];
 
 uint32_t colorPlayer1 = C0;
 uint32_t colorPlayer2 = C0;
