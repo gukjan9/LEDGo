@@ -20,7 +20,7 @@ void rtcFunc(){
 }
 
 void rtcLed(){
-  matrix.setTextColor(Mcolors[3]);
+  matrix.setTextColor(Mcolors[1]);
   Serial.println("RTC Start!");
   DateTime now = rtc.now();
   DateTime future (now + TimeSpan(7,12,30,6));
@@ -104,6 +104,6 @@ void rtcLed(){
     }
     
   matrix.show();
-  delay(30);
+  delay(1000);
     Serial.println("RTC End");
 }
