@@ -5,20 +5,14 @@ int calcLED(int row, int col){
   if(odd){
    if(col >= 1 && col <= 8){
       led = 8*row - col;
-      /* if(flag == 0) return led;
-      else return led+800; */
       return led;
     }
     else if(col >= 9 && col <= 16){
       led = 8*row - col + 264;
-      /* if(flag == 0) return led;
-      else return led+800; */
       return led;
     }
     else if(col >= 17 && col <= 24){
       led = 8*row - col + 528;
-      /* if(flag == 0) return led;
-      else return led+800; */
       return led;
     }
   }
@@ -26,22 +20,60 @@ int calcLED(int row, int col){
   else{
     if(col >= 1 && col <= 8){
       led = 8*row + col - 9;
-      /* if(flag == 0) return led;
-      else return led+800; */
       return led;
     }
     else if(col >= 9 && col <= 16){
       led = 8*row + col - 9 + 248;
-      /* if(flag == 0) return led;
-      else return led+800; */
       return led;
     }
     else if(col >= 17 && col <= 24){
       led = 8*row + col - 9 + 496;
-      /* if(flag == 0) return led;
-      else return led+800; */
       return led;
     }
+  }
+}
+
+int calcReverse(int led){
+  int remainder = led % 16;
+  int odd;
+
+  if(remainder >= 0 && remainder <= 7) odd = 1;
+  else if(remainder >= 8 && remainder <= 15) odd = 0;
+  
+  int val = led % 8;
+  
+  if(odd){
+   if(val == 0) return led + 7;
+   else if(val == 1) return led + 5;
+   else if(val == 2) return led + 3;
+   else if(val == 3) return led + 1;
+   else if(val == 4) return led - 1;
+   else if(val == 5) return led - 3;
+   else if(val == 6) return led - 5;
+   else if(val == 7) return led - 7;
+  }
+
+  else{
+   if(val == 0) return led - 7;
+   else if(val == 1) return led - 5;
+   else if(val == 2) return led - 3;
+   else if(val == 3) return led - 1;
+   else if(val == 4) return led + 1;
+   else if(val == 5) return led + 3;
+   else if(val == 6) return led + 5;
+   else if(val == 7) return led + 7;
+    }
+}
+
+int display_2Matrix(int led){
+  int val = (767 - led) / 8;
+
+  if(val >= 32 && val < 64) val = val-32;
+  else if(val >= 64) val = val-64;
+
+  if(led >= 760 - 8*val && led <= 767 - 8*val || led >= 504 - 8*val && led <= 511 - 8*val || led >= 248 - 8*val && led <= 255 - 8*val){
+    led = led + 520 + (16*val);
+    return led;
   }
 }
 
@@ -67,38 +99,56 @@ int enterRow(){
 
    if(bt1 !=0 && buttonState1==0){          // bt1 != 1 && buttonState1 == 0
     Serial.println("Button1 Pressed");
+    digitalWrite(btnLedPin1, HIGH);
     if(flag == 0) return 0;
     else return 6;
    }
    else if(bt2 !=0 && buttonState2==0){
     Serial.println("Button2 Pressed");
+    digitalWrite(btnLedPin2, HIGH);
     if(flag == 0) return 1;
     else return 5;
    }
    else if(bt3 !=0 && buttonState3==0){
     Serial.println("Button3 Pressed");
+    digitalWrite(btnLedPin3, HIGH);
     if(flag == 0) return 2;
     else return 4;
    }
    else if(bt4 !=0 && buttonState4==0){
     Serial.println("Button4 Pressed");
+    digitalWrite(btnLedPin4, HIGH);
     return 3;
    }
    else if(bt5 !=0 && buttonState5==0){
     Serial.println("Button5 Pressed");
+    digitalWrite(btnLedPin5, HIGH);
     if(flag == 0) return 4;
     else return 2;
    }
    else if(bt6 !=0 && buttonState6==0){
     Serial.println("Button6 Pressed");
+    digitalWrite(btnLedPin6, HIGH);
     if(flag == 0) return 5;
     else return 1;
    }
    else if(bt7 !=0 && buttonState7==0){
     Serial.println("Button7 Pressed");
+    digitalWrite(btnLedPin7, HIGH);
     if(flag == 0) return 6;
     else return 0;
    }
+   else{
+    digitalWrite(btnLedPin1, LOW);
+    digitalWrite(btnLedPin2, LOW);
+    digitalWrite(btnLedPin3, LOW);
+    digitalWrite(btnLedPin4, LOW);
+    digitalWrite(btnLedPin5, LOW);
+    digitalWrite(btnLedPin6, LOW);
+    digitalWrite(btnLedPin7, LOW);
+   }
+
+   delay(200);
 
    bt1=buttonState1;
    bt2=buttonState2;
@@ -256,6 +306,7 @@ void StartingScreen(){                  // 오프닝 화면
 
 void selectColorPlayer1(){
   Serial.println("selectColorPlayer1 Start");
+  displaymode = 1;
 
   MsTimer2::start();
   
@@ -298,7 +349,6 @@ void selectColorPlayer1(){
   gamestatus = 3;
   Serial.println("selectColor End");
   MsTimer2::stop();
-  clearPIXELS();
 }
 
 void selectColorPlayer2(){
@@ -313,31 +363,31 @@ void selectColorPlayer2(){
        
     if(colorDial >= 0 && colorDial < 7){
       colorPlayer2 = C0;
-      showBlockcolor(15, 4, colorPlayer2);
+      showBlockcolor(15, 36, colorPlayer2);
     }
     else if(colorDial >= 7 && colorDial < 14){
       colorPlayer2 = C1;
-      showBlockcolor(15, 4, colorPlayer2);
+      showBlockcolor(15, 36, colorPlayer2);
     }
     else if(colorDial >= 14 && colorDial < 21){
       colorPlayer2 = C2;
-      showBlockcolor(15, 4, colorPlayer2);
+      showBlockcolor(15, 36, colorPlayer2);
     }
     else if(colorDial >= 21 && colorDial < 28){
       colorPlayer2 = C3;
-      showBlockcolor(15, 4, colorPlayer2);
+      showBlockcolor(15, 36, colorPlayer2);
     }
     else if(colorDial >= 28 && colorDial < 35){
       colorPlayer2 = C4;
-      showBlockcolor(15, 4, colorPlayer2);
+      showBlockcolor(15, 36, colorPlayer2);
     }
     else if(colorDial >= 35 && colorDial < 42){
       colorPlayer2 = C5;
-      showBlockcolor(15, 4, colorPlayer2);
+      showBlockcolor(15, 36, colorPlayer2);
     }
     else if(colorDial >= 42 && colorDial <= 49){
       colorPlayer2 = C6;
-      showBlockcolor(15, 4, colorPlayer2);
+      showBlockcolor(15, 36, colorPlayer2);
     }
     delay(100);
   }
@@ -369,7 +419,7 @@ void select_sw(){
       swstate3=digitalRead(52);
     
       int lux=analogRead(brightPotPin);
-      lux = map(lux,0,1023,0,39);
+      lux = map(lux,0,1023,1,40);
       pixels.setBrightness(lux);
       pixels.show();
       delay(70);
@@ -502,4 +552,10 @@ void initializeGame(){
   player2 = 0;
   mouseIsActive = false;
   lastSwitchState = LOW;
+  displaymode = 0;
+  
+  if(scorePlayer1 == 10 || scorePlayer2 == 10){
+    scorePlayer1 = 0;
+    scorePlayer2 = 0;
+  }
 }
