@@ -216,6 +216,12 @@ void enterAnyKey(){
       Serial.println("Button Pressed");
       mouseIsActive = !mouseIsActive;
       if(gamestatus == 0) mp3Sound(1);
+      else if(gamestatus == -1){
+        gamestatus = 0;
+        mouseIsActive = false;
+        lastSwitchState = LOW;
+        timer0_millis = 0;
+      }
       Serial.print("mouseIsActive : ");
       Serial.println(mouseIsActive);
       MsTimer2::stop();
@@ -224,9 +230,21 @@ void enterAnyKey(){
   lastSwitchState = switchState;
 }
 
+void countingTime(){
+  timeVal=millis();                     //rtc 타이머 30초 한번 
+  //Serial.println(timeVal);
+  Serial.println(gamestatus);
+  if(timeVal-previousVal>=1*60*100){
+    gamestatus = -1;
+  }
+}
+
 void StartingScreen(){                  // 오프닝 화면
   MsTimer2::start();
   pixels.setBrightness(20);
+
+  countingTime();
+  
   display_LEDGo();
   if(mouseIsActive == 0) dimmingLED();
   else gamestatus = 1;
@@ -350,7 +368,7 @@ void select_sw(){
       swstate2=digitalRead(50);
       swstate3=digitalRead(52);
     
-      int lux=analogRead(A10);
+      int lux=analogRead(brightPotPin);
       lux = map(lux,0,1023,0,39);
       pixels.setBrightness(lux);
       pixels.show();
@@ -398,7 +416,7 @@ void select_sw(){
      swstate2=digitalRead(50);
      swstate3=digitalRead(52);
     
-    int sound=analogRead(A11);
+    int sound=analogRead(volumePotPin);
     sound = map(sound,0,1023,0,29);
     mp3_set_volume (sound);
     delay(70);
@@ -442,17 +460,17 @@ void endGame(){
   flag = 0; // enterRow refresh
   Serial.println("Continue or Quit?");
 
-  int ranColor = notPrevRandomColor(1);         // Quit always RED
-  Serial.print("ranColor : ");
-  Serial.println(ranColor);
-
-  display_Continue(colors[ranColor]);
+  display_Continue(winnerColor);
   display_Quit(C1);
+
+  display_Arrow(2, 2, winnerColor);
+  display_Arrow(26, 2, C1);
   
   int button = enterRow();
 
   if(button == 0){
     Serial.println("Continue");
+    display_Arrow(26, 2, 0);
     display_Quit(0);
     delay(2000);
     clearPIXELS();
@@ -460,6 +478,7 @@ void endGame(){
   }
   else if(button == 6){
     Serial.println("Quit");
+    display_Arrow(2, 2, 0);
     display_Continue(0);
     delay(2000);
     clearPIXELS();
@@ -470,9 +489,17 @@ void endGame(){
 
 void initializeGame(){
   pixelarrayInit();
-  e1, e2, e3, e4, e5, e6, e7 = 0;
-  colorPlayer1, colorPlayer2 = C0;
-  player1, player2 = 0;
+  e1 = 0;
+  e2 = 0;
+  e3 = 0;
+  e4 = 0;
+  e5 = 0;
+  e6 = 0;
+  e7 = 0;
+  colorPlayer1 = C0;
+  colorPlayer2 = C0;
+  player1 = 0;
+  player2 = 0;
   mouseIsActive = false;
   lastSwitchState = LOW;
 }
