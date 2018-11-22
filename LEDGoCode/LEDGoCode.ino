@@ -7,11 +7,12 @@
 #include <Wire.h>
 #include "RTClib.h"
 #include "game.h"
+
 #define PIN            3
 
 #define PIXELS_ROWS 32
 #define PIXELS_COLUMNS 48
-#define PIXELS_COUNT 768 //PIXELS_ROWS * PIXELS_COLUMNS
+#define PIXELS_COUNT 768*2 //PIXELS_ROWS * PIXELS_COLUMNS
 
 #define ROW 7
 #define COL 6
@@ -22,12 +23,16 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(96, 8, PIN,
   NEO_MATRIX_TOP    + NEO_MATRIX_LEFT +
   NEO_MATRIX_COLUMNS + NEO_MATRIX_SEQUENCE,
   NEO_GRB            + NEO_KHZ800);
-  
+
 const uint16_t Mcolors[] = {
   matrix.Color(255, 0, 0), matrix.Color(0, 255, 0), matrix.Color(255, 255, 0),matrix.Color(0, 0, 255), matrix.Color(255, 0, 255), matrix.Color(0, 255, 255), matrix.Color(255, 255, 255)};
 int x = matrix.width();
 
 int WinCheckField[ROW][COL];
+
+extern volatile unsigned long timer0_millis; //타이머변수
+unsigned long timeVal=0;
+unsigned long previousVal=0;
 
 boolean flag=0;
 unsigned char e[8];
@@ -42,6 +47,8 @@ boolean mouseIsActive = false;    // whether or not to control the mouse
 int lastSwitchState = LOW;        // previous switch state
 
 int colorPotPin = A9;
+int brightPotPin = A10;
+int volumePotPin = A11;
 
 void setup() {
   Serial.begin(9600);
@@ -67,20 +74,17 @@ void setup() {
 
     MsTimer2::set(100, enterAnyKey);
 
-  /* if(gamestatus == 1){
-    MsTimer2::set(1000, setTime);
-    MsTimer2::start();
-  } */
-
   pixelarrayInit();
 }
 
 void loop() {
-  if(gamestatus == -1) rtcLed();
-
-  else if(gamestatus == 0){
-    StartingScreen();
+  if(gamestatus == -1){
+    MsTimer2::start();
+    rtcLed();
   }
+
+  else if(gamestatus == 0) StartingScreen();
+  
   else if(gamestatus == 1){
     displayPlayer(1);
     enterPlayer();
@@ -94,6 +98,7 @@ void loop() {
     selectColorPlayer2();
   }
   else if(gamestatus == 4){
+    display_Score();
     blockBlink();
     WinCheckField_Data();
     select_sw();
