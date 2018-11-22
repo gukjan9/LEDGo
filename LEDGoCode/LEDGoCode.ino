@@ -31,37 +31,29 @@ int x = matrix.width();
 int WinCheckField[ROW][COL];
 
 extern volatile unsigned long timer0_millis; //타이머변수
-unsigned long timeVal=0;
-unsigned long previousVal=0;
-
-boolean flag=0;
-unsigned char e[8];
-
-int globalRow;
-
-int gamestatus = 0;
-int player1 = 0;
-int player2 = 0;
-
-boolean mouseIsActive = false;    // whether or not to control the mouse
-int lastSwitchState = LOW;        // previous switch state
-
-int colorPotPin = A9;
-int brightPotPin = A10;
-int volumePotPin = A11;
+unsigned long timeVal = 0;
+unsigned long previousVal = 0;
 
 void setup() {
   Serial.begin(9600);
   pixels.begin();
   pixels.setBrightness(10);
 
-  pinMode(buttonPin1, INPUT);
-  pinMode(buttonPin2, INPUT);
-  pinMode(buttonPin3, INPUT);
-  pinMode(buttonPin4, INPUT);
-  pinMode(buttonPin5, INPUT);
-  pinMode(buttonPin6, INPUT);
-  pinMode(buttonPin7, INPUT);
+  pinMode(buttonPin1, INPUT_PULLUP);
+  pinMode(buttonPin2, INPUT_PULLUP);
+  pinMode(buttonPin3, INPUT_PULLUP);
+  pinMode(buttonPin4, INPUT_PULLUP);
+  pinMode(buttonPin5, INPUT_PULLUP);
+  pinMode(buttonPin6, INPUT_PULLUP);
+  pinMode(buttonPin7, INPUT_PULLUP);
+
+  pinMode(btnLedPin1, OUTPUT);
+  pinMode(btnLedPin2, OUTPUT);
+  pinMode(btnLedPin3, OUTPUT);
+  pinMode(btnLedPin4, OUTPUT);
+  pinMode(btnLedPin5, OUTPUT);
+  pinMode(btnLedPin6, OUTPUT);
+  pinMode(btnLedPin7, OUTPUT);
 
   pinMode(ch1, INPUT_PULLUP);
   pinMode(ch2, INPUT_PULLUP);
@@ -86,15 +78,14 @@ void loop() {
   else if(gamestatus == 0) StartingScreen();
   
   else if(gamestatus == 1){
-    displayPlayer(1);
+    display_Player();
     enterPlayer();
   }
   if(gamestatus == 2){
-    displaySelectColor(1);
+    displaySelectColor();
     selectColorPlayer1();
   }
   else if(gamestatus == 3){
-    displaySelectColor(2);
     selectColorPlayer2();
   }
   else if(gamestatus == 4){
