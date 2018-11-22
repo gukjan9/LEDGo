@@ -41,6 +41,9 @@ int e5 = 0;
 int e6 = 0;
 int e7 = 0;
 
+char scorePlayer1 = 0;
+char scorePlayer2 = 0;
+
 uint32_t C0 = 0xFFFFFF; //White
 uint32_t C1 = 0xFF0000; //Red
 uint32_t C2 = 0xFFFF00; //Yellow
@@ -62,5 +65,7 @@ uint32_t color3 = colors[6];
 
 uint32_t colorPlayer1 = C0;
 uint32_t colorPlayer2 = C0;
+
+uint32_t winnerColor;
 
 #endif 
