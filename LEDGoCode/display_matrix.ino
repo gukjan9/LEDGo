@@ -221,6 +221,18 @@ void display_5Alphabet(char alphabet, int textRow, int textCol, uint32_t color){
   display_5PixelHex(Alphabet[ascii - 48][6], textRow, 7+(textCol*8), color);
 }
 
+void display_Arrow(int textRow, int textCol, uint32_t color){
+  int arrow[1][7] = {0x0E, 0x0E, 0x0E, 0x0E, 0x1F, 0x0E, 0x04};
+
+  display_5PixelHex(arrow[0][0], textRow, 1+(textCol*8), color);
+  display_5PixelHex(arrow[0][1], textRow, 2+(textCol*8), color);
+  display_5PixelHex(arrow[0][2], textRow, 3+(textCol*8), color);
+  display_5PixelHex(arrow[0][3], textRow, 4+(textCol*8), color);
+  display_5PixelHex(arrow[0][4], textRow, 5+(textCol*8), color);
+  display_5PixelHex(arrow[0][5], textRow, 6+(textCol*8), color);
+  display_5PixelHex(arrow[0][6], textRow, 7+(textCol*8), color);
+}
+
 void display_Firework(int i, uint32_t color){
   int j;
   for(j=1; j<=12; j++){                             // l자 Firework
@@ -364,6 +376,11 @@ void displaySelectColor(int player){
   display_5Alphabet('R', 24, 1, colors[ranColor2]);
 }
 
+void display_Score(){
+  display_5Alphabet('scorePlayer1', 27, 2, colorPlayer1);
+  display_5Alphabet('scorePlayer2', 27, 0, colorPlayer1);
+}
+
 void blinkWinBlock(int A, int B, int C, int D, int a, int b, int c, int d, uint32_t color){
   Serial.println("blinkWinBlock Start");
   MsTimer2::start();
@@ -387,6 +404,7 @@ void display_WinLose(){
   clearPIXELS();
   if(flag == 1){
     Serial.println("Player 1 WIN !");
+    winnerColor = colorPlayer1;
     display_5Alphabet('L', 5, 4, colorPlayer2);
     display_5Alphabet('W', 8, 1, colorPlayer1);
     display_5Alphabet('O', 11, 4, colorPlayer2);
@@ -397,6 +415,7 @@ void display_WinLose(){
   }
   else{
     Serial.println("Player 2 WIN !");
+    winnerColor = colorPlayer2;
     display_5Alphabet('L', 5, 1, colorPlayer1);
     display_5Alphabet('W', 8, 4, colorPlayer2);
     display_5Alphabet('O', 11, 1, colorPlayer1);
@@ -405,7 +424,7 @@ void display_WinLose(){
     display_5Alphabet('N', 20, 4, colorPlayer2);
     display_5Alphabet('E', 23, 1, colorPlayer1);
   }
-  delay(10000);
+  delay(7000);
   clearPIXELS();
 }
 
