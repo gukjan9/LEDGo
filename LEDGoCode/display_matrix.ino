@@ -1,7 +1,16 @@
 void display_PixelColor(int led, uint32_t color) {
-      pixels.setPixelColor(led, color);
-      //pixels.setPixelColor(led+768, color);
-      pixels.show();
+  if(displaymode == 0){
+    pixels.setPixelColor(led, color);
+    pixels.setPixelColor(led+768, color);
+  }
+  else if(displaymode == 1){
+    pixels.setPixelColor(led, color);
+  }
+  else if(displaymode == 2){
+    pixels.setPixelColor(led, color);
+    pixels.setPixelColor(display_2Matrix(calcReverse(led)), color);
+    }
+  pixels.show();
 }
 
 void clearPIXELS(){
@@ -28,23 +37,14 @@ void showBlockcolor(int i, int j, uint32_t color){
   int ledarr[9] = {calcLED(i,j), calcLED(i,j+1), calcLED(i,j+2), calcLED(i+1,j), calcLED(i+1,j+1), calcLED(i+1,j+2), calcLED(i+2,j), calcLED(i+2,j+1), calcLED(i+2,j+2)};
   
   display_PixelColor(ledarr[0], color);
-  //display_PixelColor(ledarr[0]+800, color);
   display_PixelColor(ledarr[1], color);
-  //display_PixelColor(ledarr[1]+800, color);
   display_PixelColor(ledarr[2], color);
-  //display_PixelColor(ledarr[2]+800, color);
   display_PixelColor(ledarr[3], color);
-  //display_PixelColor(ledarr[3]+800, color);
   display_PixelColor(ledarr[4], color);
-  //display_PixelColor(ledarr[4]+800, color);
   display_PixelColor(ledarr[5], color);
-  //display_PixelColor(ledarr[5]+800, color);
   display_PixelColor(ledarr[6], color);
-  //display_PixelColor(ledarr[6]+800, color);
   display_PixelColor(ledarr[7], color);
-  //display_PixelColor(ledarr[7]+800, color);
   display_PixelColor(ledarr[8], color);
-  //display_PixelColor(ledarr[8]+800, color);
 }
 
 int Quotient(int x, int y){               // 몫 함수
@@ -124,8 +124,8 @@ void display_4Alphabet(char alphabet, int textRow, int textCol, uint32_t color){
   int Alphabet[44][6] = 
   {{0x06, 0X09, 0X09, 0X09, 0X09, 0X06}, // 0
   {0X0f, 0X04, 0X04, 0X05, 0X06, 0X04}, // 1
-  {0X0F, 0X02, 0X04, 0X08, 0X09, 0X06},   // 2
-  {0X07, 0X08, 0X08, 0X0F, 0X08, 0X07},   // 3
+  {0X0F, 0X02, 0X04, 0X08, 0X09, 0X06}, // 2
+  {0X07, 0X08, 0X08, 0X0F, 0X08, 0X07}, // 3
   {0X08, 0X08, 0X0F, 0X09, 0X09, 0X09}, // 4
   {0X0F, 0X08, 0X08, 0X09, 0X01, 0X0F}, // 5
   {0X0F, 0X09, 0X09, 0X0F, 0X01, 0X0F}, // 6
@@ -315,11 +315,10 @@ void dimmingLED(){
   }
 }
 
-void displayPlayer(int player){
+void display_Player(){
   pixels.setBrightness(20);
   pixels.show();
-  Serial.print("Waiting for Player ");
-  Serial.println(player);
+  Serial.println("Waiting for Player1 and Player2");
   
   int ranColor1 = random(0, 12);
   Serial.print("Player Color : ");
@@ -336,24 +335,32 @@ void displayPlayer(int player){
   display_4Alphabet('R', 26, 2, colors[ranColor1]);
 
   display_5Alphabet('1', 12, 1, colors[ranColor2]);
+  display_5Alphabet('2', 12, 4, colors[ranColor2]);
 }
 
 void displayReady(int player){
   Serial.print("Player ");
   Serial.print(player);
   Serial.println(" is Ready !");
+  int col;
+  displaymode = 1;
+  
   mp3Sound(2);
-  display_5Alphabet('R', 0, 0, C1);
-  display_5Alphabet('E', 6, 0, C7);
-  display_5Alphabet('A', 12, 0, C2);
-  display_5Alphabet('D', 18, 0, C8);
-  display_5Alphabet('Y', 24, 0, C9);
+
+  if(player == 1) col = 0;
+  else col = 3;
+  
+  display_5Alphabet('R', 0, col, C1);
+  display_5Alphabet('E', 6, col, C7);
+  display_5Alphabet('A', 12, col, C2);
+  display_5Alphabet('D', 18, col, C8);
+  display_5Alphabet('Y', 24, col, C9);
+
+  displaymode = 0;
 }
 
-void displaySelectColor(int player){
-  Serial.print("Select Player");
-  Serial.print(player);
-  Serial.println(" Color");
+void displaySelectColor(){
+  Serial.println("Select Player1 and Player2 Color");
 
   int ranColor1 = random(0, 12);
   Serial.print("ranColor1 : ");
@@ -377,8 +384,9 @@ void displaySelectColor(int player){
 }
 
 void display_Score(){
-  display_5Alphabet('scorePlayer1', 27, 2, colorPlayer1);
-  display_5Alphabet('scorePlayer2', 27, 0, colorPlayer1);
+  displaymode = 2;
+  display_4Alphabet(scorePlayer1, 27, 2, colorPlayer1);
+  display_4Alphabet(scorePlayer2, 27, 0, colorPlayer2);
 }
 
 void blinkWinBlock(int A, int B, int C, int D, int a, int b, int c, int d, uint32_t color){
@@ -404,6 +412,7 @@ void display_WinLose(){
   clearPIXELS();
   if(flag == 1){
     Serial.println("Player 1 WIN !");
+    scorePlayer1++;
     winnerColor = colorPlayer1;
     display_5Alphabet('L', 5, 4, colorPlayer2);
     display_5Alphabet('W', 8, 1, colorPlayer1);
@@ -415,6 +424,7 @@ void display_WinLose(){
   }
   else{
     Serial.println("Player 2 WIN !");
+    scorePlayer2++;
     winnerColor = colorPlayer2;
     display_5Alphabet('L', 5, 1, colorPlayer1);
     display_5Alphabet('W', 8, 4, colorPlayer2);
