@@ -26,8 +26,9 @@ int gamestatus = 0;
 int player1 = 0;
 int player2 = 0;
 
+int switchState = 1;
 boolean mouseIsActive = false;    // whether or not to control the mouse
-int lastSwitchState = LOW;        // previous switch state
+int lastSwitchState = HIGH;        // previous switch state
 
 int buttonState1 = 0;
 int buttonState2 = 0;
@@ -58,7 +59,6 @@ int globalRow;
 boolean flag=0;
 unsigned char e[8];
 
-
 int e1 = 0;
 int e2 = 0;
 int e3 = 0;
@@ -67,8 +67,8 @@ int e5 = 0;
 int e6 = 0;
 int e7 = 0;
 
-char scorePlayer1 = 0;
-char scorePlayer2 = 0;
+int scorePlayer1 = 0;
+int scorePlayer2 = 0;
 
 uint32_t C0 = 0xFFFFFF; //White
 uint32_t C1 = 0xFF0000; //Red
