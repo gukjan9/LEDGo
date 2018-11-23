@@ -164,10 +164,31 @@ void display_4Alphabet(char alphabet, int textRow, int textCol, uint32_t color){
   
   display_4PixelHex(Alphabet[ascii - 48][0], textRow, 1+(textCol*8), color);
   display_4PixelHex(Alphabet[ascii - 48][1], textRow, 2+(textCol*8), color);
-  display_4PixelHex(Alphabet[ascii - 48][2], textRow, 3+(textCol*8), color);
-  display_4PixelHex(Alphabet[ascii - 48][3], textRow, 4+(textCol*8), color);
-  display_4PixelHex(Alphabet[ascii - 48][4], textRow, 5+(textCol*8), color);
-  display_4PixelHex(Alphabet[ascii - 48][5], textRow, 6+(textCol*8), color);
+  //display_4PixelHex(Alphabet[ascii - 48][2], textRow, 3+(textCol*8), color);
+  //display_4PixelHex(Alphabet[ascii - 48][3], textRow, 4+(textCol*8), color);
+  //display_4PixelHex(Alphabet[ascii - 48][4], textRow, 5+(textCol*8), color);
+  //display_4PixelHex(Alphabet[ascii - 48][5], textRow, 6+(textCol*8), color);
+}
+
+void display_4Number(int num, int textRow, int textCol, uint32_t color){  
+  int Number[10][6] = 
+  {{0x06, 0X09, 0X09, 0X09, 0X09, 0X06}, // 0
+  {0X0f, 0X04, 0X04, 0X05, 0X06, 0X04}, // 1
+  {0X0F, 0X02, 0X04, 0X08, 0X09, 0X06}, // 2
+  {0X07, 0X08, 0X08, 0X0F, 0X08, 0X07}, // 3
+  {0X08, 0X08, 0X0F, 0X09, 0X09, 0X09}, // 4
+  {0X0F, 0X08, 0X08, 0X09, 0X01, 0X0F}, // 5
+  {0X0F, 0X09, 0X09, 0X0F, 0X01, 0X0F}, // 6
+  {0X08, 0X08, 0X08, 0X09, 0X09, 0X0F}, // 7
+  {0X0F, 0X09, 0X09, 0X0F, 0X09, 0X0F}, // 8
+  {0X0F, 0X08, 0X08, 0X0F, 0X09, 0X0F}}; // 9
+
+  display_4PixelHex(Number[num][0], textRow, 1+(textCol*8), color);
+  display_4PixelHex(Number[num][1], textRow, 2+(textCol*8), color);
+  display_4PixelHex(Number[num][2], textRow, 3+(textCol*8), color);
+  display_4PixelHex(Number[num][3], textRow, 4+(textCol*8), color);
+  display_4PixelHex(Number[num][4], textRow, 5+(textCol*8), color);
+  display_4PixelHex(Number[num][5], textRow, 6+(textCol*8), color);
 }
 
 void display_5Alphabet(char alphabet, int textRow, int textCol, uint32_t color){           // 5X7 Alphabet 정의  
@@ -334,6 +355,8 @@ void display_Player(){
   display_4Alphabet('E', 21, 2, colors[ranColor1]);
   display_4Alphabet('R', 26, 2, colors[ranColor1]);
 
+  displaymode = 1;
+  
   display_5Alphabet('1', 12, 1, colors[ranColor2]);
   display_5Alphabet('2', 12, 4, colors[ranColor2]);
 }
@@ -343,7 +366,6 @@ void displayReady(int player){
   Serial.print(player);
   Serial.println(" is Ready !");
   int col;
-  displaymode = 1;
   
   mp3Sound(2);
 
@@ -385,8 +407,8 @@ void displaySelectColor(){
 
 void display_Score(){
   displaymode = 2;
-  display_4Alphabet(scorePlayer1, 27, 2, colorPlayer1);
-  display_4Alphabet(scorePlayer2, 27, 0, colorPlayer2);
+  display_4Number(scorePlayer1, 28, 2, colorPlayer1);
+  display_4Number(scorePlayer2, 28, 0, colorPlayer2);
 }
 
 void blinkWinBlock(int A, int B, int C, int D, int a, int b, int c, int d, uint32_t color){
