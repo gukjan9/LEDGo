@@ -59,7 +59,7 @@ void setup() {
   pinMode(ch2, INPUT_PULLUP);
   pinMode(ch3, INPUT_PULLUP);
 
-  rtcFunc();
+  //rtcFunc();
   mp3_set_serial (Serial);  //set Serial for DFPlayer-mini mp3 module 
   delay(1);  //wait 1ms for mp3 module to set volume
   mp3_set_volume (10);
@@ -70,7 +70,7 @@ void setup() {
 }
 
 void loop() {
-  if(gamestatus == -1){
+  /* if(gamestatus == -1){
     MsTimer2::start();
     rtcLed();
   }
@@ -98,5 +98,6 @@ void loop() {
     display_WinLose();
     endGame();
     initializeGame();
-  }
+  } */
+  display_4Alphabet('0', 12, 4, C0);
 }
