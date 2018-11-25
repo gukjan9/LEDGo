@@ -6,17 +6,17 @@ int calcLED(int row, int col){  // 의문의점과 관련
    if(col >= 1 && col <= 8 || col >= 25 && col <= 32){
       led = 8*row - col;
       if(col <= 24) return led;
-      else return led+768;
+      else return led+792;
     }
     else if(col >= 9 && col <= 16 || col >= 33 && col <= 40){
       led = 8*row - col + 264;
       if(col <= 24) return led;
-      else return led+768;
+      else return led+792;
     }
     else if(col >= 17 && col <= 24 || col >= 41 && col <= 48){
       led = 8*row - col + 528;
       if(col <= 24) return led;
-      else return led+768;
+      else return led+792;
     }
   }
 
@@ -24,17 +24,17 @@ int calcLED(int row, int col){  // 의문의점과 관련
     if(col >= 1 && col <= 8 || col >= 25 && col <= 32){
       led = 8*row + col - 9;
       if(col <= 24) return led;
-      else return led+768;
+      else return led+792;
     }
     else if(col >= 9 && col <= 16 || col >= 33 && col <= 40){
       led = 8*row + col - 9 + 248;
       if(col <= 24) return led;
-      else return led+768;
+      else return led+792;
     }
     else if(col >= 17 && col <= 24 || col >= 41 && col <= 48){
       led = 8*row + col - 9 + 496;
       if(col <= 24) return led;
-      else return led+768;
+      else return led+792;
     }
   }
 }
@@ -297,7 +297,7 @@ void selectColorPlayer1(){
 
   MsTimer2::start();
   
-  while(mouseIsActive){
+  while(!mouseIsActive){
     Serial.println("Selecting Color ...");
     int colorDial = analogRead(colorPotPin);
     colorDial = map(colorDial, 0, 1023, 0, 49);
@@ -343,7 +343,7 @@ void selectColorPlayer2(){
 
   MsTimer2::start();
   
-  while(!mouseIsActive){
+  while(mouseIsActive){
     Serial.println("Selecting Color ...");
     int colorDial = analogRead(colorPotPin);
     colorDial = map(colorDial, 0, 1023, 0, 49);
@@ -538,6 +538,7 @@ void initializeGame(){
   player1 = 0;
   player2 = 0;
   mouseIsActive = false;
+  switchState = 1;
   lastSwitchState = HIGH;
   displaymode = 0;
   
