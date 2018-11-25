@@ -22,13 +22,9 @@ int brightPotPin = A1;
 int volumePotPin = A2;
 
 int displaymode = 0;
-int gamestatus = 0;
+int gamestatus = -1;
 int player1 = 0;
 int player2 = 0;
-
-int switchState = 1;
-boolean mouseIsActive = false;    // whether or not to control the mouse
-int lastSwitchState = HIGH;        // previous switch state
 
 int buttonState1 = 0;
 int buttonState2 = 0;
