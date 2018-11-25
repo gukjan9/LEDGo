@@ -10,6 +10,9 @@ void display_PixelColor(int led, uint32_t color) {
     pixels.setPixelColor(led, color);
     pixels.setPixelColor(display_2Matrix(calcReverse(led)), color);
     }
+  else if(displaymode == 3){
+    pixels.setPixelColor(led+768, color);
+  }
   pixels.show();
 }
 
@@ -111,7 +114,7 @@ void display_5PixelHex(int hex, int textRow, int textCol, uint32_t color){      
   int quotient = hex;
   int data = 0x00;
   
-  while(quotient != 0){
+  while(quotient != 1){
     int temp_remainder = Remainder(quotient, 2);
     data = temp_remainder | data;
     data = data << 1;
@@ -158,7 +161,7 @@ void display_4Alphabet(char alphabet, int textRow, int textCol, uint32_t color){
   {0X09, 0X0F, 0X09, 0X09, 0X09, 0X09}, // W
   {0X09, 0X09, 0X06, 0X06, 0X09, 0X09}, // X
   {0X06, 0X06, 0X06, 0X09, 0X09, 0X09}, // Y
-  {0X0F, 0X01, 0X02, 0X04, 0X08, 0X0F}};  // Z
+  {0X0F, 0X01, 0X02, 0X04, 0X08, 0X0F}}; // Z
                    
   int ascii = alphabet;
   
@@ -183,12 +186,12 @@ void display_4Number(int num, int textRow, int textCol, uint32_t color){
   {0X0F, 0X09, 0X09, 0X0F, 0X09, 0X0F}, // 8
   {0X0F, 0X08, 0X08, 0X0F, 0X09, 0X0F}}; // 9
 
-  display_4PixelHex(Number[num][0], textRow, 1+(textCol*8), color);
-  display_4PixelHex(Number[num][1], textRow, 2+(textCol*8), color);
-  display_4PixelHex(Number[num][2], textRow, 3+(textCol*8), color);
-  display_4PixelHex(Number[num][3], textRow, 4+(textCol*8), color);
-  display_4PixelHex(Number[num][4], textRow, 5+(textCol*8), color);
-  display_4PixelHex(Number[num][5], textRow, 6+(textCol*8), color);
+  display_4PixelHex(Number[num][0], textRow, 1+textCol, color);
+  display_4PixelHex(Number[num][1], textRow, 2+textCol, color);
+  display_4PixelHex(Number[num][2], textRow, 3+textCol, color);
+  display_4PixelHex(Number[num][3], textRow, 4+textCol, color);
+  display_4PixelHex(Number[num][4], textRow, 5+textCol, color);
+  display_4PixelHex(Number[num][5], textRow, 6+textCol, color);
 }
 
 void display_5Alphabet(char alphabet, int textRow, int textCol, uint32_t color){           // 5X7 Alphabet 정의  
@@ -233,7 +236,6 @@ void display_5Alphabet(char alphabet, int textRow, int textCol, uint32_t color){
 
   int ascii = alphabet;
 
-  //if(textCol <= 2){
     display_5PixelHex(Alphabet[ascii - 48][0], textRow, 1+(textCol*8), color);
     display_5PixelHex(Alphabet[ascii - 48][1], textRow, 2+(textCol*8), color);
     display_5PixelHex(Alphabet[ascii - 48][2], textRow, 3+(textCol*8), color);
@@ -241,16 +243,6 @@ void display_5Alphabet(char alphabet, int textRow, int textCol, uint32_t color){
     display_5PixelHex(Alphabet[ascii - 48][4], textRow, 5+(textCol*8), color);
     display_5PixelHex(Alphabet[ascii - 48][5], textRow, 6+(textCol*8), color);
     display_5PixelHex(Alphabet[ascii - 48][6], textRow, 7+(textCol*8), color);
-  //}
-  /*else{
-    display_5PixelHex(Alphabet[ascii - 48][6], textRow, 1+(textCol*8), color);
-    display_5PixelHex(Alphabet[ascii - 48][5], textRow, 2+(textCol*8), color);
-    display_5PixelHex(Alphabet[ascii - 48][4], textRow, 3+(textCol*8), color);
-    display_5PixelHex(Alphabet[ascii - 48][3], textRow, 4+(textCol*8), color);
-    display_5PixelHex(Alphabet[ascii - 48][2], textRow, 5+(textCol*8), color);
-    display_5PixelHex(Alphabet[ascii - 48][1], textRow, 6+(textCol*8), color);
-    display_5PixelHex(Alphabet[ascii - 48][0], textRow, 7+(textCol*8), color);
-  }*/
 }
 
 void display_Arrow(int textRow, int textCol, uint32_t color){
@@ -269,7 +261,7 @@ void display_Firework(int i, uint32_t color){
   int j;
   for(j=1; j<=12; j++){                             // l자 Firework
     display_PixelColor(calcLED(i+3,j), C0);
-    delay(40);
+    delay(20);
     display_PixelColor(calcLED(i+3,j), 0);
   }
   display_PixelColor(calcLED(i+3,12), color);      // Small Firework
@@ -277,13 +269,13 @@ void display_Firework(int i, uint32_t color){
   display_PixelColor(calcLED(i+4,13), color);
   display_PixelColor(calcLED(i+2,11), color);
   display_PixelColor(calcLED(i+4,11), color);
-  delay(60);
+  delay(30);
   display_PixelColor(calcLED(i+3,12), 0);
   display_PixelColor(calcLED(i+2,13), 0);
   display_PixelColor(calcLED(i+4,13), 0);
   display_PixelColor(calcLED(i+2,11), 0);
   display_PixelColor(calcLED(i+4,11), 0);
-  delay(60);
+  delay(30);
   display_PixelColor(calcLED(i+3,13), color);      // Big Firework
   display_PixelColor(calcLED(i+3,14), color);
   display_PixelColor(calcLED(i+4,12), color);
@@ -292,7 +284,7 @@ void display_Firework(int i, uint32_t color){
   display_PixelColor(calcLED(i+3,11), color);
   display_PixelColor(calcLED(i+1,12), color);
   display_PixelColor(calcLED(i+2,12), color);
-  delay(60);
+  delay(30);
   display_PixelColor(calcLED(i+3,13), 0);
   display_PixelColor(calcLED(i+3,14), 0);
   display_PixelColor(calcLED(i+4,12), 0);
@@ -301,7 +293,7 @@ void display_Firework(int i, uint32_t color){
   display_PixelColor(calcLED(i+3,11), 0);
   display_PixelColor(calcLED(i+1,12), 0);
   display_PixelColor(calcLED(i+2,12), 0);
-  delay(60);
+  delay(30);
 }
 
 void display_LEDGo(){
@@ -369,7 +361,10 @@ void display_Player(){
   displaymode = 1;
   
   display_5Alphabet('1', 12, 1, colors[ranColor2]);
-  display_5Alphabet('2', 12, 4, colors[ranColor2]);
+
+  displaymode = 3;
+  
+  display_5Alphabet('2', 12, 1, colors[ranColor2]);
 }
 
 void displayReady(int player){
@@ -379,15 +374,12 @@ void displayReady(int player){
   int col;
   
   mp3Sound(2);
-
-  if(player == 1) col = 0;
-  else col = 3;
   
-  display_5Alphabet('R', 0, col, C1);
-  display_5Alphabet('E', 6, col, C7);
-  display_5Alphabet('A', 12, col, C2);
-  display_5Alphabet('D', 18, col, C8);
-  display_5Alphabet('Y', 24, col, C9);
+  display_5Alphabet('R', 0, 0, C1);
+  display_5Alphabet('E', 6, 0, C7);
+  display_5Alphabet('A', 12, 0, C2);
+  display_5Alphabet('D', 18, 0, C8);
+  display_5Alphabet('Y', 24, 0, C9);
 }
 
 void displaySelectColor(){
@@ -416,8 +408,8 @@ void displaySelectColor(){
 
 void display_Score(){
   displaymode = 2;
-  display_4Number(scorePlayer1, 28, 2, colorPlayer1);
-  display_4Number(scorePlayer2, 28, 0, colorPlayer2);
+  display_4Number(scorePlayer1, 28, 1, colorPlayer1);
+  display_4Number(scorePlayer2, 28, 17, colorPlayer2);
 }
 
 void blinkWinBlock(int A, int B, int C, int D, int a, int b, int c, int d, uint32_t color){
@@ -445,24 +437,38 @@ void display_WinLose(){
     Serial.println("Player 1 WIN !");
     scorePlayer1++;
     winnerColor = colorPlayer1;
-    display_5Alphabet('L', 5, 4, colorPlayer2);
+    displaymode = 3;
+    display_5Alphabet('L', 5, 1, colorPlayer2);
+    displaymode = 1;
     display_5Alphabet('W', 8, 1, colorPlayer1);
-    display_5Alphabet('O', 11, 4, colorPlayer2);
+    displaymode = 3;
+    display_5Alphabet('O', 11, 1, colorPlayer2);
+    displaymode = 1;
     display_5Alphabet('I', 14, 1, colorPlayer1);
-    display_5Alphabet('S', 17, 4, colorPlayer2);
+    displaymode = 3;
+    display_5Alphabet('S', 17, 1, colorPlayer2);
+    displaymode = 1;
     display_5Alphabet('N', 20, 1, colorPlayer1);
-    display_5Alphabet('E', 23, 4, colorPlayer2);
+    displaymode = 3;
+    display_5Alphabet('E', 23, 1, colorPlayer2);
   }
   else{
     Serial.println("Player 2 WIN !");
     scorePlayer2++;
     winnerColor = colorPlayer2;
+    displaymode = 1;
     display_5Alphabet('L', 5, 1, colorPlayer1);
-    display_5Alphabet('W', 8, 4, colorPlayer2);
+    displaymode = 3;
+    display_5Alphabet('W', 8, 1, colorPlayer2);
+    displaymode = 1;
     display_5Alphabet('O', 11, 1, colorPlayer1);
-    display_5Alphabet('I', 14, 4, colorPlayer2);
+    displaymode = 3;
+    display_5Alphabet('I', 14, 1, colorPlayer2);
+    displaymode = 1;
     display_5Alphabet('S', 17, 1, colorPlayer1);
-    display_5Alphabet('N', 20, 4, colorPlayer2);
+    displaymode = 3;
+    display_5Alphabet('N', 20, 1, colorPlayer2);
+    displaymode = 1;
     display_5Alphabet('E', 23, 1, colorPlayer1);
   }
   delay(7000);
