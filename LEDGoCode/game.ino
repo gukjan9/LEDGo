@@ -1,48 +1,47 @@
-int calcLED(int row, int col){
+int calcLED(int row, int col){  // 의문의점과 관련
   int odd = row%2;
   int led = 0;
 
   if(odd){
-   if(col >= 1 && col <= 8){
+   if(col >= 1 && col <= 8 || col >= 25 && col <= 32){
       led = 8*row - col;
-      return led;
+      if(col <= 24) return led;
+      else return led+768;
     }
-    else if(col >= 9 && col <= 16){
+    else if(col >= 9 && col <= 16 || col >= 33 && col <= 40){
       led = 8*row - col + 264;
-      return led;
+      if(col <= 24) return led;
+      else return led+768;
     }
-    else if(col >= 17 && col <= 24){
+    else if(col >= 17 && col <= 24 || col >= 41 && col <= 48){
       led = 8*row - col + 528;
-      return led;
+      if(col <= 24) return led;
+      else return led+768;
     }
   }
 
   else{
-    if(col >= 1 && col <= 8){
+    if(col >= 1 && col <= 8 || col >= 25 && col <= 32){
       led = 8*row + col - 9;
-      return led;
+      if(col <= 24) return led;
+      else return led+768;
     }
-    else if(col >= 9 && col <= 16){
+    else if(col >= 9 && col <= 16 || col >= 33 && col <= 40){
       led = 8*row + col - 9 + 248;
-      return led;
+      if(col <= 24) return led;
+      else return led+768;
     }
-    else if(col >= 17 && col <= 24){
+    else if(col >= 17 && col <= 24 || col >= 41 && col <= 48){
       led = 8*row + col - 9 + 496;
-      return led;
+      if(col <= 24) return led;
+      else return led+768;
     }
   }
 }
 
 int calcReverse(int led){
-  int remainder = led % 16;
-  int odd;
-
-  if(remainder >= 0 && remainder <= 7) odd = 1;
-  else if(remainder >= 8 && remainder <= 15) odd = 0;
-  
   int val = led % 8;
-  
-  if(odd){
+
    if(val == 0) return led + 7;
    else if(val == 1) return led + 5;
    else if(val == 2) return led + 3;
@@ -51,18 +50,6 @@ int calcReverse(int led){
    else if(val == 5) return led - 3;
    else if(val == 6) return led - 5;
    else if(val == 7) return led - 7;
-  }
-
-  else{
-   if(val == 0) return led - 7;
-   else if(val == 1) return led - 5;
-   else if(val == 2) return led - 3;
-   else if(val == 3) return led - 1;
-   else if(val == 4) return led + 1;
-   else if(val == 5) return led + 3;
-   else if(val == 6) return led + 5;
-   else if(val == 7) return led + 7;
-    }
 }
 
 int display_2Matrix(int led){
@@ -259,17 +246,17 @@ void enterAnyKey(){
   Serial.println("enterAnyKey Start");
   Serial.print("mouseIsActive : ");
   Serial.println(mouseIsActive);
-  int switchState = digitalRead (buttonPin1) | digitalRead (buttonPin2) | digitalRead (buttonPin3) 
-                  | digitalRead (buttonPin4) | digitalRead (buttonPin5) | digitalRead (buttonPin6)| digitalRead (buttonPin7); // Press Any Key
+  switchState = digitalRead (buttonPin1) & digitalRead (buttonPin2) & digitalRead (buttonPin3) 
+              & digitalRead (buttonPin4) & digitalRead (buttonPin5) & digitalRead (buttonPin6) & digitalRead (buttonPin7); // Press Any Key
   if (switchState != lastSwitchState) {
-    if (switchState == HIGH) {
+    if (switchState == LOW) {
       Serial.println("Button Pressed");
       mouseIsActive = !mouseIsActive;
       if(gamestatus == 0) mp3Sound(1);
       else if(gamestatus == -1){
         gamestatus = 0;
         mouseIsActive = false;
-        lastSwitchState = LOW;
+        lastSwitchState = HIGH;
         timer0_millis = 0;
       }
       Serial.print("mouseIsActive : ");
@@ -277,7 +264,7 @@ void enterAnyKey(){
       MsTimer2::stop();
     }
   }
-  lastSwitchState = switchState;
+  switchState = lastSwitchState;
 }
 
 void countingTime(){
@@ -551,7 +538,7 @@ void initializeGame(){
   player1 = 0;
   player2 = 0;
   mouseIsActive = false;
-  lastSwitchState = LOW;
+  lastSwitchState = HIGH;
   displaymode = 0;
   
   if(scorePlayer1 == 10 || scorePlayer2 == 10){
