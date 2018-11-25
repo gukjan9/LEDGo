@@ -164,10 +164,10 @@ void display_4Alphabet(char alphabet, int textRow, int textCol, uint32_t color){
   
   display_4PixelHex(Alphabet[ascii - 48][0], textRow, 1+(textCol*8), color);
   display_4PixelHex(Alphabet[ascii - 48][1], textRow, 2+(textCol*8), color);
-  //display_4PixelHex(Alphabet[ascii - 48][2], textRow, 3+(textCol*8), color);
-  //display_4PixelHex(Alphabet[ascii - 48][3], textRow, 4+(textCol*8), color);
-  //display_4PixelHex(Alphabet[ascii - 48][4], textRow, 5+(textCol*8), color);
-  //display_4PixelHex(Alphabet[ascii - 48][5], textRow, 6+(textCol*8), color);
+  display_4PixelHex(Alphabet[ascii - 48][2], textRow, 3+(textCol*8), color);
+  display_4PixelHex(Alphabet[ascii - 48][3], textRow, 4+(textCol*8), color);
+  display_4PixelHex(Alphabet[ascii - 48][4], textRow, 5+(textCol*8), color);
+  display_4PixelHex(Alphabet[ascii - 48][5], textRow, 6+(textCol*8), color);
 }
 
 void display_4Number(int num, int textRow, int textCol, uint32_t color){  
