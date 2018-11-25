@@ -70,7 +70,7 @@ void setup() {
 }
 
 void loop() {
-  /* if(gamestatus == -1){
+  if(gamestatus == -1){
     MsTimer2::start();
     rtcLed();
   }
@@ -98,6 +98,6 @@ void loop() {
     display_WinLose();
     endGame();
     initializeGame();
-  } */
-  display_4Alphabet('0', 12, 4, C0);
+  }
+  //display_4Alphabet('0', 12, 4, C0);
 }
