@@ -233,7 +233,7 @@ void display_5Alphabet(char alphabet, int textRow, int textCol, uint32_t color){
 
   int ascii = alphabet;
 
-  if(textCol <= 2){
+  //if(textCol <= 2){
     display_5PixelHex(Alphabet[ascii - 48][0], textRow, 1+(textCol*8), color);
     display_5PixelHex(Alphabet[ascii - 48][1], textRow, 2+(textCol*8), color);
     display_5PixelHex(Alphabet[ascii - 48][2], textRow, 3+(textCol*8), color);
@@ -241,8 +241,8 @@ void display_5Alphabet(char alphabet, int textRow, int textCol, uint32_t color){
     display_5PixelHex(Alphabet[ascii - 48][4], textRow, 5+(textCol*8), color);
     display_5PixelHex(Alphabet[ascii - 48][5], textRow, 6+(textCol*8), color);
     display_5PixelHex(Alphabet[ascii - 48][6], textRow, 7+(textCol*8), color);
-  }
-  else{
+  //}
+  /*else{
     display_5PixelHex(Alphabet[ascii - 48][6], textRow, 1+(textCol*8), color);
     display_5PixelHex(Alphabet[ascii - 48][5], textRow, 2+(textCol*8), color);
     display_5PixelHex(Alphabet[ascii - 48][4], textRow, 3+(textCol*8), color);
@@ -250,7 +250,7 @@ void display_5Alphabet(char alphabet, int textRow, int textCol, uint32_t color){
     display_5PixelHex(Alphabet[ascii - 48][2], textRow, 5+(textCol*8), color);
     display_5PixelHex(Alphabet[ascii - 48][1], textRow, 6+(textCol*8), color);
     display_5PixelHex(Alphabet[ascii - 48][0], textRow, 7+(textCol*8), color);
-  }
+  }*/
 }
 
 void display_Arrow(int textRow, int textCol, uint32_t color){
@@ -388,8 +388,6 @@ void displayReady(int player){
   display_5Alphabet('A', 12, col, C2);
   display_5Alphabet('D', 18, col, C8);
   display_5Alphabet('Y', 24, col, C9);
-
-  displaymode = 0;
 }
 
 void displaySelectColor(){
