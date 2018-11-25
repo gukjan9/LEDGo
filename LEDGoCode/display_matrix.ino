@@ -6,7 +6,7 @@ void display_PixelColor(int led, uint32_t color) {
   else if(displaymode == 1){
     pixels.setPixelColor(led, color);
   }
-  else if(displaymode == 2){
+  else if(displaymode == 2){  // blockBLink때
     pixels.setPixelColor(led, color);
     pixels.setPixelColor(display_2Matrix(calcReverse(led)), color);
     }
@@ -232,14 +232,25 @@ void display_5Alphabet(char alphabet, int textRow, int textCol, uint32_t color){
   {0X1F, 0X03, 0X02, 0X04, 0X08, 0X18, 0X1F}}; // Z
 
   int ascii = alphabet;
-  
-  display_5PixelHex(Alphabet[ascii - 48][0], textRow, 1+(textCol*8), color);
-  display_5PixelHex(Alphabet[ascii - 48][1], textRow, 2+(textCol*8), color);
-  display_5PixelHex(Alphabet[ascii - 48][2], textRow, 3+(textCol*8), color);
-  display_5PixelHex(Alphabet[ascii - 48][3], textRow, 4+(textCol*8), color);
-  display_5PixelHex(Alphabet[ascii - 48][4], textRow, 5+(textCol*8), color);
-  display_5PixelHex(Alphabet[ascii - 48][5], textRow, 6+(textCol*8), color);
-  display_5PixelHex(Alphabet[ascii - 48][6], textRow, 7+(textCol*8), color);
+
+  if(textCol <= 2){
+    display_5PixelHex(Alphabet[ascii - 48][0], textRow, 1+(textCol*8), color);
+    display_5PixelHex(Alphabet[ascii - 48][1], textRow, 2+(textCol*8), color);
+    display_5PixelHex(Alphabet[ascii - 48][2], textRow, 3+(textCol*8), color);
+    display_5PixelHex(Alphabet[ascii - 48][3], textRow, 4+(textCol*8), color);
+    display_5PixelHex(Alphabet[ascii - 48][4], textRow, 5+(textCol*8), color);
+    display_5PixelHex(Alphabet[ascii - 48][5], textRow, 6+(textCol*8), color);
+    display_5PixelHex(Alphabet[ascii - 48][6], textRow, 7+(textCol*8), color);
+  }
+  else{
+    display_5PixelHex(Alphabet[ascii - 48][6], textRow, 1+(textCol*8), color);
+    display_5PixelHex(Alphabet[ascii - 48][5], textRow, 2+(textCol*8), color);
+    display_5PixelHex(Alphabet[ascii - 48][4], textRow, 3+(textCol*8), color);
+    display_5PixelHex(Alphabet[ascii - 48][3], textRow, 4+(textCol*8), color);
+    display_5PixelHex(Alphabet[ascii - 48][2], textRow, 5+(textCol*8), color);
+    display_5PixelHex(Alphabet[ascii - 48][1], textRow, 6+(textCol*8), color);
+    display_5PixelHex(Alphabet[ascii - 48][0], textRow, 7+(textCol*8), color);
+  }
 }
 
 void display_Arrow(int textRow, int textCol, uint32_t color){
@@ -415,7 +426,7 @@ void blinkWinBlock(int A, int B, int C, int D, int a, int b, int c, int d, uint3
   Serial.println("blinkWinBlock Start");
   MsTimer2::start();
   
-  while(mouseIsActive){
+  while(!mouseIsActive){
     Serial.println("Blinking Win Block...");
     showBlockcolor(A, a, 0);
     showBlockcolor(B, b, 0);
