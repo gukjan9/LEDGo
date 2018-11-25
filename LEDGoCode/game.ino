@@ -1,8 +1,10 @@
-int calcLED(int row, int col){  // 의문의점과 관련
+int calcLED(int row, int col){  // 의문의 점과 관련
   int odd = row%2;
   int led = 0;
 
-  if(odd){
+  if(row == 0) return 2000;
+  else{
+  if(odd == 1){
    if(col >= 1 && col <= 8 || col >= 25 && col <= 32){
       led = 8*row - col;
       if(col <= 24) return led;
@@ -20,7 +22,7 @@ int calcLED(int row, int col){  // 의문의점과 관련
     }
   }
 
-  else{
+  else if(odd == 0){
     if(col >= 1 && col <= 8 || col >= 25 && col <= 32){
       led = 8*row + col - 9;
       if(col <= 24) return led;
@@ -36,6 +38,7 @@ int calcLED(int row, int col){  // 의문의점과 관련
       if(col <= 24) return led;
       else return led+792;
     }
+  }
   }
 }
 
@@ -167,6 +170,7 @@ void enterPlayer(){
 
   if(player1 == 1 && player2 == 1){
     Serial.println("All Player Ready");
+    displaymode = 0;
     gamestatus = 2;
     clearPIXELS();
   }
