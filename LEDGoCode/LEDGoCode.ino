@@ -34,6 +34,10 @@ extern volatile unsigned long timer0_millis; //타이머변수
 unsigned long timeVal = 0;
 unsigned long previousVal = 0;
 
+int switchState = 1;
+boolean mouseIsActive = false;    // whether or not to control the mouse
+int lastSwitchState = HIGH;        // previous switch state
+
 void setup() {
   Serial.begin(9600);
   pixels.begin();
@@ -99,5 +103,4 @@ void loop() {
     endGame();
     initializeGame();
   }
-  //display_4Alphabet('0', 12, 4, C0);
 }
