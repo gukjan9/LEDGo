@@ -21,7 +21,9 @@ void rtcFunc(){
 
 void rtcLed(){
   matrix.setTextColor(Mcolors[1]);
+  matrix.setBrightness(10);
   Serial.println("RTC Start!");
+  displaymode = 0;
   DateTime now = rtc.now();
   DateTime future (now + TimeSpan(7,12,30,6));
 
