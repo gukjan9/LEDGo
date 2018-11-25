@@ -26,7 +26,6 @@ Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(96, 8, PIN,
 
 const uint16_t Mcolors[] = {
   matrix.Color(255, 0, 0), matrix.Color(0, 255, 0), matrix.Color(255, 255, 0),matrix.Color(0, 0, 255), matrix.Color(255, 0, 255), matrix.Color(0, 255, 255), matrix.Color(255, 255, 255)};
-int x = matrix.width();
 
 int WinCheckField[ROW][COL];
 
@@ -63,12 +62,12 @@ void setup() {
   pinMode(ch2, INPUT_PULLUP);
   pinMode(ch3, INPUT_PULLUP);
 
-  //rtcFunc();
+  rtcFunc();
   mp3_set_serial (Serial);  //set Serial for DFPlayer-mini mp3 module 
   delay(1);  //wait 1ms for mp3 module to set volume
   mp3_set_volume (10);
 
-    MsTimer2::set(100, enterAnyKey);
+  MsTimer2::set(100, enterAnyKey);
 
   pixelarrayInit();
 }
