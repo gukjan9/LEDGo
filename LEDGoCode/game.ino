@@ -157,11 +157,13 @@ void enterPlayer(){
   if(val == 0 | val == 6){
     if(val == 0 && player1 == 0){
       player1 = 1;
+      displaymode = 1;
       displayReady(1);
       if(player2 == 0) enterPlayer();
      }
    else if(val == 6 && player2 == 0){
       player2 = 1;
+      displaymode = 3;
       displayReady(2);
       if(player1 == 0) enterPlayer();
      }
@@ -275,7 +277,7 @@ void countingTime(){
   timeVal=millis();                     //rtc 타이머 30초 한번 
   //Serial.println(timeVal);
   Serial.println(gamestatus);
-  if(timeVal-previousVal>=1*60*100){
+  if(timeVal-previousVal>=1*30*100){
     gamestatus = -1;
   }
 }
@@ -346,6 +348,8 @@ void selectColorPlayer2(){
   Serial.println("selectColorPlayer2 Start");
 
   MsTimer2::start();
+
+  displaymode = 3;
   
   while(mouseIsActive){
     Serial.println("Selecting Color ...");
@@ -500,6 +504,8 @@ void select_sw(){
 void endGame(){
   flag = 0; // enterRow refresh
   Serial.println("Continue or Quit?");
+
+  displaymode = 0;
 
   display_Continue(winnerColor);
   display_Quit(C1);
