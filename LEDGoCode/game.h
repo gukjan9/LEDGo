@@ -22,7 +22,7 @@ int brightPotPin = A1;
 int volumePotPin = A2;
 
 int displaymode = 0;
-int gamestatus = -1;
+int gamestatus = 0;
 int player1 = 0;
 int player2 = 0;
 
