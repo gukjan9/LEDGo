@@ -164,7 +164,7 @@ void display_4Alphabet(char alphabet, int textRow, int textCol, uint32_t color){
   {0X0F, 0X01, 0X02, 0X04, 0X08, 0X0F}}; // Z
                    
   int ascii = alphabet;
-  
+
   display_4PixelHex(Alphabet[ascii - 48][0], textRow, 1+(textCol*8), color);
   display_4PixelHex(Alphabet[ascii - 48][1], textRow, 2+(textCol*8), color);
   display_4PixelHex(Alphabet[ascii - 48][2], textRow, 3+(textCol*8), color);
@@ -350,7 +350,7 @@ void display_Player(){
   int ranColor2 = notPrevRandomColor(ranColor1);
   Serial.print("Player Number Color : ");
   Serial.println(ranColor2);
-  
+
   display_4Alphabet('P', 1, 2, colors[ranColor1]);
   display_4Alphabet('L', 6, 2, colors[ranColor1]);
   display_4Alphabet('A', 11, 2, colors[ranColor1]);
@@ -418,11 +418,13 @@ void blinkWinBlock(int A, int B, int C, int D, int a, int b, int c, int d, uint3
   
   while(!mouseIsActive){
     Serial.println("Blinking Win Block...");
+    mp3Sound(7);
     showBlockcolor(A, a, 0);
     showBlockcolor(B, b, 0);
     showBlockcolor(C, c, 0);
     showBlockcolor(D, d, 0);
     delay(500);
+    mp3Sound(7);
     showBlockcolor(A, a, color);
     showBlockcolor(B, b, color);
     showBlockcolor(C, c, color);
