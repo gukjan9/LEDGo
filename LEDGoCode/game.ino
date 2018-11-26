@@ -187,6 +187,7 @@ void blockBlink(){
   Serial.println("******************");
   Serial.println("blockBlink Start");
   globalRow = enterRow();
+  
   int i = globalRow;
   int j;
   int top = 21;
@@ -229,21 +230,41 @@ void blockBlink(){
 
 void mp3Sound(int i){
   switch(i){
-    case 1 : Serial.println("0001 Insert Coin Sound");
-             mp3_play (1);  // insert coin
+    case 1 : Serial.println("001 Insert Coin Sound");
+             myDFPlayer.play(1);  // insert coin
              delay(1500);
              break;
-    case 2 : Serial.println("0002 Player Ready");
-             mp3_play (2);  // Player Ready
+    case 2 : Serial.println("002 Player Ready Sound");
+             myDFPlayer.play(2);  // Player Ready
              delay(1500);
              break;
-    case 3 : Serial.println("0003 Enter");
-             mp3_play (3);  // Button Enter Sound
+    case 3 : Serial.println("003 Enter Sound");
+             myDFPlayer.play(3);  // Button Enter Sound
              delay(1500);
              break;
-    case 4 : Serial.println("0004 Button Pressed");
-             mp3_play (4);  // Button Pressed
+    case 4 : Serial.println("004 Button Pressed Sound");
+             myDFPlayer.play(4);  // Button Pressed
              delay(1500);
+             break;
+    case 5 : Serial.println("005 Rotating POT Sound");
+             myDFPlayer.play(5);  // Button Pressed
+             delay(1000);
+             break;
+    case 6 : Serial.println("006 Error Sound");
+             myDFPlayer.play(6);  // Button Pressed
+             delay(1000);
+             break;
+    case 7 : Serial.println("007 WinCheck Win Sound");
+             myDFPlayer.play(7);  // Button Pressed
+             delay(100);
+             break;
+    case 8 : Serial.println("008 Next Status Sound");
+             myDFPlayer.play(8);  // Button Pressed
+             delay(100);
+             break;
+    case 9 : Serial.println("009 Win Sound");
+             myDFPlayer.play(9);  // Button Pressed
+             delay(7000);
              break;
   }
 }
@@ -261,10 +282,11 @@ void enterAnyKey(){
       if(gamestatus == 0) mp3Sound(1);
       else if(gamestatus == -1){
         gamestatus = 0;
-        mouseIsActive = false;
+        mouseIsActive = 0;
         lastSwitchState = HIGH;
         timer0_millis = 0;
       }
+      else if(gamestatus == 4) mp3Sound(8);
       Serial.print("mouseIsActive : ");
       Serial.println(mouseIsActive);
       MsTimer2::stop();
@@ -303,36 +325,43 @@ void selectColorPlayer1(){
 
   MsTimer2::start();
   
-  while(!mouseIsActive){
+  while(mouseIsActive){
     Serial.println("Selecting Color ...");
     int colorDial = analogRead(colorPotPin);
     colorDial = map(colorDial, 0, 1023, 0, 49);
        
     if(colorDial >= 0 && colorDial < 7){
+      mp3Sound(5);
       colorPlayer1 = C0;
       showBlockcolor(15, 4, colorPlayer1);
     }
     else if(colorDial >= 7 && colorDial < 14){
+      mp3Sound(5);
       colorPlayer1 = C1;
       showBlockcolor(15, 4, colorPlayer1);
     }
     else if(colorDial >= 14 && colorDial < 21){
+      mp3Sound(5);
       colorPlayer1 = C2;
       showBlockcolor(15, 4, colorPlayer1);
     }
     else if(colorDial >= 21 && colorDial < 28){
+      mp3Sound(5);
       colorPlayer1 = C3;
       showBlockcolor(15, 4, colorPlayer1);
     }
     else if(colorDial >= 28 && colorDial < 35){
+      mp3Sound(5);
       colorPlayer1 = C4;
       showBlockcolor(15, 4, colorPlayer1);
     }
     else if(colorDial >= 35 && colorDial < 42){
+      mp3Sound(5);
       colorPlayer1 = C5;
       showBlockcolor(15, 4, colorPlayer1);
     }
     else if(colorDial >= 42 && colorDial <= 49){
+      mp3Sound(5);
       colorPlayer1 = C6;
       showBlockcolor(15, 4, colorPlayer1);
     }
@@ -351,36 +380,43 @@ void selectColorPlayer2(){
 
   displaymode = 3;
   
-  while(mouseIsActive){
+  while(!mouseIsActive){
     Serial.println("Selecting Color ...");
     int colorDial = analogRead(colorPotPin);
     colorDial = map(colorDial, 0, 1023, 0, 49);
        
     if(colorDial >= 0 && colorDial < 7){
+      mp3Sound(5);
       colorPlayer2 = C0;
       showBlockcolor(15, 36, colorPlayer2);
     }
     else if(colorDial >= 7 && colorDial < 14){
+      mp3Sound(5);
       colorPlayer2 = C1;
       showBlockcolor(15, 36, colorPlayer2);
     }
     else if(colorDial >= 14 && colorDial < 21){
+      mp3Sound(5);
       colorPlayer2 = C2;
       showBlockcolor(15, 36, colorPlayer2);
     }
     else if(colorDial >= 21 && colorDial < 28){
+      mp3Sound(5);
       colorPlayer2 = C3;
       showBlockcolor(15, 36, colorPlayer2);
     }
     else if(colorDial >= 28 && colorDial < 35){
+      mp3Sound(5);
       colorPlayer2 = C4;
       showBlockcolor(15, 36, colorPlayer2);
     }
     else if(colorDial >= 35 && colorDial < 42){
+      mp3Sound(5);
       colorPlayer2 = C5;
       showBlockcolor(15, 36, colorPlayer2);
     }
     else if(colorDial >= 42 && colorDial <= 49){
+      mp3Sound(5);
       colorPlayer2 = C6;
       showBlockcolor(15, 36, colorPlayer2);
     }
@@ -463,7 +499,7 @@ void select_sw(){
     
     int sound=analogRead(volumePotPin);
     sound = map(sound,0,1023,0,29);
-    mp3_set_volume (sound);
+    myDFPlayer.volume(sound);
     delay(70);
 
     Serial.print("b = ");
@@ -517,6 +553,7 @@ void endGame(){
 
   if(button == 0){
     Serial.println("Continue");
+    mp3Sound(3);
     display_Arrow(26, 2, 0);
     display_Quit(0);
     delay(2000);
@@ -525,6 +562,7 @@ void endGame(){
   }
   else if(button == 6){
     Serial.println("Quit");
+    mp3Sound(4);
     display_Arrow(2, 2, 0);
     display_Continue(0);
     delay(2000);
@@ -547,7 +585,7 @@ void initializeGame(){
   colorPlayer2 = C0;
   player1 = 0;
   player2 = 0;
-  mouseIsActive = false;
+  mouseIsActive = 0;
   switchState = 1;
   lastSwitchState = HIGH;
   displaymode = 0;
