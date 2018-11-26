@@ -2,11 +2,12 @@
 #include <Adafruit_NeoMatrix.h>
 #include <Adafruit_NeoPixel.h>
 #include <MsTimer2.h>
-#include <SoftwareSerial.h>
-#include <DFPlayer_Mini_Mp3.h>
 #include <Wire.h>
 #include "RTClib.h"
 #include "game.h"
+#include "Arduino.h"
+#include "SoftwareSerial.h"
+#include "DFRobotDFPlayerMini.h"
 
 #define PIN            3
 
@@ -34,11 +35,17 @@ unsigned long timeVal = 0;
 unsigned long previousVal = 0;
 
 int switchState = 1;
-boolean mouseIsActive = false;    // whether or not to control the mouse
+boolean mouseIsActive = 0;    // whether or not to control the mouse
 int lastSwitchState = HIGH;        // previous switch state
 
+SoftwareSerial mySoftwareSerial(10, 11); // RX, TX
+DFRobotDFPlayerMini myDFPlayer;
+
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
+
+  mySoftwareSerial.begin(9600);
+  
   pixels.begin();
   pixels.setBrightness(10);
 
@@ -63,9 +70,15 @@ void setup() {
   pinMode(ch3, INPUT_PULLUP);
 
   rtcFunc();
-  mp3_set_serial (Serial);  //set Serial for DFPlayer-mini mp3 module 
-  delay(1);  //wait 1ms for mp3 module to set volume
-  mp3_set_volume (10);
+
+  if (!myDFPlayer.begin(mySoftwareSerial)) {  //Use softwareSerial to communicate with mp3.
+      Serial.println(F("Unable to begin:"));
+      Serial.println(F("1.Please recheck the connection!"));
+      Serial.println(F("2.Please insert the SD card!"));
+      while(true);
+    }
+  Serial.println(F("DFPlayer Mini online."));
+  myDFPlayer.volume(10);  //Set volume value. From 0 to 30
 
   MsTimer2::set(100, enterAnyKey);
 
