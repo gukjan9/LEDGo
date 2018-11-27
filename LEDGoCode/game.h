@@ -63,6 +63,11 @@ int e5 = 0;
 int e6 = 0;
 int e7 = 0;
 
+
+int switchState = 1;
+boolean mouseIsActive = false;    // whether or not to control the mouse
+int lastSwitchState = 1;        // previous switch state
+
 int scorePlayer1 = 0;
 int scorePlayer2 = 0;
 
