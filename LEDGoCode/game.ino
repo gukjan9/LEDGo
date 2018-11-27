@@ -244,11 +244,12 @@ void mp3Sound(int i){
              break;
     case 4 : Serial.println("004 Button Pressed Sound");
              myDFPlayer.play(4);  // Button Pressed
+             myDFPlayer.volume(30);
              delay(1500);
              break;
     case 5 : Serial.println("005 Rotating POT Sound");
              myDFPlayer.play(5);  // Button Pressed
-             delay(1000);
+             delay(500);
              break;
     case 6 : Serial.println("006 Error Sound");
              myDFPlayer.play(6);  // Button Pressed
@@ -260,7 +261,7 @@ void mp3Sound(int i){
              break;
     case 8 : Serial.println("008 Next Status Sound");
              myDFPlayer.play(8);  // Button Pressed
-             delay(100);
+             delay(1000);
              break;
     case 9 : Serial.println("009 Win Sound");
              myDFPlayer.play(9);  // Button Pressed
@@ -278,7 +279,9 @@ void enterAnyKey(){
   if (switchState != lastSwitchState) {
     if (switchState == LOW) {
       Serial.println("Button Pressed");
-      mouseIsActive = !mouseIsActive;
+      if( mouseIsActive==false) mouseIsActive=true;
+      else  mouseIsActive=false;
+     // mouseIsActive = !mouseIsActive;
       if(gamestatus == 0) mp3Sound(1);
       else if(gamestatus == -1){
         gamestatus = 0;
@@ -299,7 +302,7 @@ void countingTime(){
   timeVal=millis();                     //rtc 타이머 30초 한번 
   //Serial.println(timeVal);
   Serial.println(gamestatus);
-  if(timeVal-previousVal>=1*30*100){
+  if(timeVal-previousVal>=2*60*100){
     gamestatus = -1;
   }
 }
@@ -388,37 +391,37 @@ void selectColorPlayer2(){
     if(colorDial >= 0 && colorDial < 7){
       mp3Sound(5);
       colorPlayer2 = C0;
-      showBlockcolor(15, 36, colorPlayer2);
+      showBlockcolor(15, 4, colorPlayer2);
     }
     else if(colorDial >= 7 && colorDial < 14){
       mp3Sound(5);
       colorPlayer2 = C1;
-      showBlockcolor(15, 36, colorPlayer2);
+      showBlockcolor(15, 4, colorPlayer2);
     }
     else if(colorDial >= 14 && colorDial < 21){
       mp3Sound(5);
       colorPlayer2 = C2;
-      showBlockcolor(15, 36, colorPlayer2);
+      showBlockcolor(15, 4, colorPlayer2);
     }
     else if(colorDial >= 21 && colorDial < 28){
       mp3Sound(5);
       colorPlayer2 = C3;
-      showBlockcolor(15, 36, colorPlayer2);
+      showBlockcolor(15, 4, colorPlayer2);
     }
     else if(colorDial >= 28 && colorDial < 35){
       mp3Sound(5);
       colorPlayer2 = C4;
-      showBlockcolor(15, 36, colorPlayer2);
+      showBlockcolor(15, 4, colorPlayer2);
     }
     else if(colorDial >= 35 && colorDial < 42){
       mp3Sound(5);
       colorPlayer2 = C5;
-      showBlockcolor(15, 36, colorPlayer2);
+      showBlockcolor(15, 4, colorPlayer2);
     }
     else if(colorDial >= 42 && colorDial <= 49){
       mp3Sound(5);
       colorPlayer2 = C6;
-      showBlockcolor(15, 36, colorPlayer2);
+      showBlockcolor(15, 4, colorPlayer2);
     }
     delay(100);
   }
@@ -556,6 +559,8 @@ void endGame(){
     mp3Sound(3);
     display_Arrow(26, 2, 0);
     display_Quit(0);
+    mouseIsActive = 1;
+    myDFPlayer.volume(20);
     delay(2000);
     clearPIXELS();
     gamestatus = 2;
@@ -589,6 +594,7 @@ void initializeGame(){
   switchState = 1;
   lastSwitchState = HIGH;
   displaymode = 0;
+  myDFPlayer.volume(20);
   
   if(scorePlayer1 == 10 || scorePlayer2 == 10){
     scorePlayer1 = 0;
