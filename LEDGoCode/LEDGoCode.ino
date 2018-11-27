@@ -34,10 +34,6 @@ extern volatile unsigned long timer0_millis; //타이머변수
 unsigned long timeVal = 0;
 unsigned long previousVal = 0;
 
-int switchState = 1;
-boolean mouseIsActive = 0;    // whether or not to control the mouse
-int lastSwitchState = HIGH;        // previous switch state
-
 SoftwareSerial mySoftwareSerial(10, 11); // RX, TX
 DFRobotDFPlayerMini myDFPlayer;
 
@@ -78,7 +74,7 @@ void setup() {
       while(true);
     }
   Serial.println(F("DFPlayer Mini online."));
-  myDFPlayer.volume(10);  //Set volume value. From 0 to 30
+  myDFPlayer.volume(20);  //Set volume value. From 0 to 30
 
   MsTimer2::set(100, enterAnyKey);
 
