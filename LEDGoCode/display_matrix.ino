@@ -173,7 +173,7 @@ void display_4Alphabet(char alphabet, int textRow, int textCol, uint32_t color){
   display_4PixelHex(Alphabet[ascii - 48][5], textRow, 6+(textCol*8), color);
 }
 
-void display_4Number(int num, int textRow, int textCol, uint32_t color){  
+void display_4Number_1P(int num, int textRow, int textCol, uint32_t color){  
   int Number[10][6] = 
   {{0x06, 0X09, 0X09, 0X09, 0X09, 0X06}, // 0
   {0X0f, 0X04, 0X04, 0X05, 0X06, 0X04}, // 1
@@ -185,6 +185,27 @@ void display_4Number(int num, int textRow, int textCol, uint32_t color){
   {0X08, 0X08, 0X08, 0X09, 0X09, 0X0F}, // 7
   {0X0F, 0X09, 0X09, 0X0F, 0X09, 0X0F}, // 8
   {0X0F, 0X08, 0X08, 0X0F, 0X09, 0X0F}}; // 9
+
+  display_4PixelHex(Number[num][0], textRow, 1+textCol, color);
+  display_4PixelHex(Number[num][1], textRow, 2+textCol, color);
+  display_4PixelHex(Number[num][2], textRow, 3+textCol, color);
+  display_4PixelHex(Number[num][3], textRow, 4+textCol, color);
+  display_4PixelHex(Number[num][4], textRow, 5+textCol, color);
+  display_4PixelHex(Number[num][5], textRow, 6+textCol, color);
+}
+
+void display_4Number_2P(int num, int textRow, int textCol, uint32_t color){  
+  int Number[10][6] = 
+  {{0x06, 0X09, 0X09, 0X09, 0X09, 0X06}, // 0
+   {0X04, 0X06, 0X05, 0X04, 0X04, 0X0F}, // 1
+   {0X06, 0X09, 0X08, 0X04, 0X02, 0X0F}, // 2
+   {0X07, 0X08, 0X0F, 0X08, 0X08, 0X07}, // 3
+   {0X09, 0X09, 0X09, 0X0F, 0X08, 0X08}, // 4
+   {0X0F, 0X01, 0X0F, 0X08, 0X08, 0X0F}, // 5
+   {0X0F, 0X01, 0X0F, 0X09, 0X09, 0X0F}, // 6
+   {0X0F, 0X09, 0X09, 0X08, 0X08, 0X08}, // 7
+   {0X0F, 0X09, 0X0F, 0X09, 0X09, 0X0F}, // 8
+   {0X0F, 0X09, 0X0F, 0X08, 0X08, 0X0F}}; // 9
 
   display_4PixelHex(Number[num][0], textRow, 1+textCol, color);
   display_4PixelHex(Number[num][1], textRow, 2+textCol, color);
@@ -408,15 +429,15 @@ void displaySelectColor(){
 
 void display_Score(){
   displaymode = 2;
-  display_4Number(scorePlayer1, 28, 1, colorPlayer1);
-  display_4Number(scorePlayer2, 28, 17, colorPlayer2);
+  display_4Number_1P(scorePlayer1, 28, 1, colorPlayer1);
+  display_4Number_2P(scorePlayer2, 28, 17, colorPlayer2);
 }
 
 void blinkWinBlock(int A, int B, int C, int D, int a, int b, int c, int d, uint32_t color){
   Serial.println("blinkWinBlock Start");
   MsTimer2::start();
   
-  while(!mouseIsActive){
+  while(mouseIsActive){
     Serial.println("Blinking Win Block...");
     mp3Sound(7);
     showBlockcolor(A, a, 0);
@@ -430,6 +451,7 @@ void blinkWinBlock(int A, int B, int C, int D, int a, int b, int c, int d, uint3
     showBlockcolor(C, c, color);
     showBlockcolor(D, d, color);
   }
+  mp3Sound(8);
   Serial.println("blinkWinBlock End");
 }
 
@@ -453,6 +475,7 @@ void display_WinLose(){
     display_5Alphabet('N', 20, 1, colorPlayer1);
     displaymode = 3;
     display_5Alphabet('E', 23, 1, colorPlayer2);
+    mp3Sound(9);
   }
   else{
     Serial.println("Player 2 WIN !");
@@ -472,6 +495,7 @@ void display_WinLose(){
     display_5Alphabet('N', 20, 1, colorPlayer2);
     displaymode = 1;
     display_5Alphabet('E', 23, 1, colorPlayer1);
+    mp3Sound(9);
   }
   delay(7000);
   clearPIXELS();
