@@ -538,6 +538,7 @@ void select_sw(){
     ch3_Read=swstate3;
     }
   }
+  pixels.show();
 }
 
 void endGame(){
