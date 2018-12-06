@@ -86,7 +86,6 @@ void loop() {
     MsTimer2::start();
     rtcLed();
   }
-
   else if(gamestatus == 0) StartingScreen();
   
   else if(gamestatus == 1){
