@@ -3,8 +3,8 @@
 
 const int buttonPin1 = 23;
 const int buttonPin2 = 25;
-const int buttonPin3 = 27;
-const int buttonPin4 = 29;
+const int buttonPin3 = 29;
+const int buttonPin4 = 27;
 const int buttonPin5 = 31;
 const int buttonPin6 = 33;
 const int buttonPin7 = 35;
