@@ -344,7 +344,7 @@ void display_Player(){
   pixels.show();
   Serial.println("Waiting for Player1 and Player2");
   
-  int ranColor1 = random(0, 12);
+  int ranColor1 = random(0, 11);
   Serial.print("Player Color : ");
   Serial.println(ranColor1);
   int ranColor2 = notPrevRandomColor(ranColor1);
@@ -375,17 +375,17 @@ void displayReady(int player){
   
   mp3Sound(2);
   
-  display_5Alphabet('R', 0, 0, C1);
-  display_5Alphabet('E', 6, 0, C7);
-  display_5Alphabet('A', 12, 0, C2);
-  display_5Alphabet('D', 18, 0, C8);
-  display_5Alphabet('Y', 24, 0, C9);
+  display_5Alphabet('R', 1, 0, C1);
+  display_5Alphabet('E', 7, 0, C7);
+  display_5Alphabet('A', 13, 0, C2);
+  display_5Alphabet('D', 19, 0, C8);
+  display_5Alphabet('Y', 25, 0, C9);
 }
 
 void displaySelectColor(){
   Serial.println("Select Player1 and Player2 Color");
 
-  int ranColor1 = random(0, 12);
+  int ranColor1 = random(0, 11);
   Serial.print("ranColor1 : ");
   Serial.println(ranColor1);
   int ranColor2 = notPrevRandomColor(ranColor1);
@@ -399,17 +399,23 @@ void displaySelectColor(){
   display_4Alphabet('C', 21, 2, colors[ranColor1]);
   display_4Alphabet('T', 26, 2, colors[ranColor1]);
 
-  display_5Alphabet('C', 0, 1, colors[ranColor2]);
-  display_5Alphabet('O', 6, 1, colors[ranColor2]);
-  display_5Alphabet('L', 12, 1, colors[ranColor2]);
-  display_5Alphabet('O', 18, 1, colors[ranColor2]);
-  display_5Alphabet('R', 24, 1, colors[ranColor2]);
+  display_5Alphabet('C', 1, 1, colors[ranColor2]);
+  display_5Alphabet('O', 7, 1, colors[ranColor2]);
+  display_5Alphabet('L', 13, 1, colors[ranColor2]);
+  display_5Alphabet('O', 19, 1, colors[ranColor2]);
+  display_5Alphabet('R', 25, 1, colors[ranColor2]);
 }
 
 void display_Score(){
-  displaymode = 2;
+  displaymode = 1;
   display_4Number(scorePlayer1, 28, 1, colorPlayer1);
+  displaymode = 3;
+  display_4Number(scorePlayer1, 0, 1, colorPlayer1);
+  displaymode = 1;
   display_4Number(scorePlayer2, 28, 17, colorPlayer2);
+  displaymode = 3;
+  display_4Number(scorePlayer2, 0, 17, colorPlayer2);
+  displaymode = 2;
 }
 
 void blinkWinBlock(int A, int B, int C, int D, int a, int b, int c, int d, uint32_t color){
@@ -439,7 +445,6 @@ void display_WinLose(){
   if(flag == 1){
     Serial.println("Player 1 WIN !");
     scorePlayer1++;
-    winnerColor = colorPlayer1;
     displaymode = 3;
     display_5Alphabet('L', 5, 1, colorPlayer2);
     displaymode = 1;
@@ -459,7 +464,6 @@ void display_WinLose(){
   else{
     Serial.println("Player 2 WIN !");
     scorePlayer2++;
-    winnerColor = colorPlayer2;
     displaymode = 1;
     display_5Alphabet('L', 5, 1, colorPlayer1);
     displaymode = 3;
@@ -476,7 +480,7 @@ void display_WinLose(){
     display_5Alphabet('E', 23, 1, colorPlayer1);
     mp3Sound(9);
   }
-  delay(7000);
+  delay(1000);
   clearPIXELS();
 }
 
