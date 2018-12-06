@@ -1,4 +1,4 @@
-int calcLED(int row, int col){  // 의문의 점과 관련
+int calcLED(int row, int col){
   int odd = row%2;
   int led = 0;
 
@@ -90,20 +90,17 @@ int enterRow(){
    if(bt1 !=0 && buttonState1==0){          // bt1 != 1 && buttonState1 == 0
     Serial.println("Button1 Pressed");
     digitalWrite(btnLedPin1, HIGH);
-    if(flag == 0) return 0;
-    else return 6;
+    return 0;
    }
    else if(bt2 !=0 && buttonState2==0){
     Serial.println("Button2 Pressed");
     digitalWrite(btnLedPin2, HIGH);
-    if(flag == 0) return 1;
-    else return 5;
+    return 1;
    }
    else if(bt3 !=0 && buttonState3==0){
     Serial.println("Button3 Pressed");
     digitalWrite(btnLedPin3, HIGH);
-    if(flag == 0) return 2;
-    else return 4;
+    return 2;
    }
    else if(bt4 !=0 && buttonState4==0){
     Serial.println("Button4 Pressed");
@@ -113,20 +110,17 @@ int enterRow(){
    else if(bt5 !=0 && buttonState5==0){
     Serial.println("Button5 Pressed");
     digitalWrite(btnLedPin5, HIGH);
-    if(flag == 0) return 4;
-    else return 2;
+    return 4;
    }
    else if(bt6 !=0 && buttonState6==0){
     Serial.println("Button6 Pressed");
     digitalWrite(btnLedPin6, HIGH);
-    if(flag == 0) return 5;
-    else return 1;
+    return 5;
    }
    else if(bt7 !=0 && buttonState7==0){
     Serial.println("Button7 Pressed");
     digitalWrite(btnLedPin7, HIGH);
-    if(flag == 0) return 6;
-    else return 0;
+    return 6;
    }
    else{
     digitalWrite(btnLedPin1, LOW);
@@ -207,7 +201,7 @@ void blockBlink(){
       blockBlink();
     }
 
-  mp3Sound(4);
+  if(j <= 5) mp3Sound(4);
 
   if(flag == 0){
   while(top >= 4*j+1){
@@ -277,7 +271,7 @@ void enterAnyKey(){
   switchState = digitalRead (buttonPin1) & digitalRead (buttonPin2) & digitalRead (buttonPin3) 
               & digitalRead (buttonPin4) & digitalRead (buttonPin5) & digitalRead (buttonPin6) & digitalRead (buttonPin7); // Press Any Key
   if (switchState != lastSwitchState) {
-    if (switchState == LOW) {
+    if (switchState == 0) {
       Serial.println("Button Pressed");
       if( mouseIsActive==false) mouseIsActive=true;
       else  mouseIsActive=false;
@@ -286,7 +280,7 @@ void enterAnyKey(){
       else if(gamestatus == -1){
         gamestatus = 0;
         mouseIsActive = 0;
-        lastSwitchState = HIGH;
+        lastSwitchState = 1;
         timer0_millis = 0;
       }
       else if(gamestatus == 4) mp3Sound(8);
@@ -560,7 +554,6 @@ void endGame(){
     mp3Sound(3);
     display_Arrow(26, 2, 0);
     display_Quit(0);
-    mouseIsActive = 1;
     myDFPlayer.volume(20);
     delay(2000);
     clearPIXELS();
@@ -572,6 +565,8 @@ void endGame(){
     display_Arrow(2, 2, 0);
     display_Continue(0);
     delay(2000);
+    scorePlayer1 = 0;
+    scorePlayer2 = 0;
     clearPIXELS();
     gamestatus = 0;
   }
@@ -591,9 +586,10 @@ void initializeGame(){
   colorPlayer2 = C0;
   player1 = 0;
   player2 = 0;
-  mouseIsActive = 0;
+  if(gamestatus == 2) mouseIsActive = true;
+  else if(gamestatus == 0) mouseIsActive = false;
   switchState = 1;
-  lastSwitchState = HIGH;
+  lastSwitchState = 1;
   displaymode = 0;
   myDFPlayer.volume(20);
   
